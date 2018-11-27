@@ -28,7 +28,7 @@ def main(config):
     with tf.Session() as sess:
         model = CharRNN(sess, config.epoch_size, config.num_layers, config.batch_size, config.learning_rate,
                     len(words)+1, config.rnn_size, generate_batches, config.checkpoint_dir, False)
-        text = model.gen_poem(start_word, word_id_map, start_token, end_token, id_word_map)
+        text = model.gen_poem(config.start_word, word_id_map, start_token, end_token, id_word_map)
         pretify_poem(text)
 
 if __name__ == '__main__':

@@ -72,8 +72,8 @@ class CharRNN(object):
         ckpt = tf.train.get_checkpoint_state(self.checkpoint_dir)
         if ckpt and ckpt.model_checkpoint_path:
             ckpt_path = str(ckpt.model_checkpoint_path)
-            print(os.path.join(os.getcwd(), ckpt_path))
-            self.saver.restore(self.sess, os.path.join(self.checkpoint_dir, ckpt_path))
+            print(ckpt_path)
+            self.saver.restore(self.sess, ckpt_path)
             
     def id_to_word(self, prediction, id_word_map):
         t = np.cumsum(prediction)
