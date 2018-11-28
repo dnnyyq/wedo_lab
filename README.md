@@ -2,4 +2,4 @@
 
 **1. python：为你写诗**
 
-  [利用深度学习，生成古典诗歌]](gen_poem/README.md)
+  [利用深度学习，生成古典诗歌]](https://github.com/dnnyyq/wedo_lab/tree/master/gen_poem)
