@@ -30,15 +30,15 @@ def set_env(gpu):
 
 def get_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--image_num', type=int, default='200000') 
-    parser.add_argument('--image_dir', type=str, default='./images/')
-    parser.add_argument('--tf_data_dir', type=str, default='./data/')
-    parser.add_argument('--check_point_dir', type=str, default='./checkpoint')
-    parser.add_argument('--gpu', type=str, default='0')
-    parser.add_argument('--learning_rate', type=float, default='0.0001')
-    parser.add_argument('--batch_size', type=int, default='25')
-    parser.add_argument('--epoch_size', type=int, default='200001')
-    parser.add_argument('--img_file', type=str, default='./images/82xm.jpg')
+    parser.add_argument('--image_num', type=int, default='200000', help='生成验证图片数量') 
+    parser.add_argument('--image_dir', type=str, default='./images/', help='图片路径')
+    parser.add_argument('--tf_data_dir', type=str, default='./data/', help='tf_record文件路径')
+    parser.add_argument('--check_point_dir', type=str, default='./checkpoint', help='checkpoint路径')
+    parser.add_argument('--gpu', type=str, default='0', help='gpu')
+    parser.add_argument('--learning_rate', type=float, default='0.0001', help='学习率')
+    parser.add_argument('--batch_size', type=int, default='25', help='batch size')
+    parser.add_argument('--epoch_size', type=int, default='200001', help='epoch')
+    parser.add_argument('--img_file', type=str, default='./images/82xm.jpg', help='单图识别图片文件')
     
     config = parser.parse_args()
     return config
