@@ -42,7 +42,7 @@ python train.py
 ```
 
 
-**2. 测试验证过程**
+**3. 测试验证过程**
 ```
 usage: test_one.py [-h] [--image_num IMAGE_NUM] [--image_dir IMAGE_DIR]
                 [--tf_data_dir TF_DATA_DIR]
