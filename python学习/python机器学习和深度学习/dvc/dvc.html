@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dvc.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E9%A1%B9%E7%9B%AE%E7%9A%84python%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7dvc">人工智能项目的python版本管理工具DVC</h1>
+<p>个人简介：
+wedo实验君, 数据分析师；热爱生活，热爱写作</p>
+<h2 id="1-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86">1. 人工智能项目的版本管理</h2>
+<p>对于传统的软件工程项目(比如java, web), git是一个非常不错的代码版本管理工具。但是人工智能项目，如机器学习或者深度学习，和传统软件工程项目有一定的差别</p>
+<ul>
+<li>代码和文件：人工智能项目除了代码以外，还要大量的训练数据，还有文件比较大的模型文件</li>
+<li>开发过程：人工智能项目开发过程，存在一定的不确定性，是一个探索调优的过程。需要很多的组合调参（不同的参数，不同的数据等），然后分别做评估，挑选最好的模型。这是一个相对复杂的过程，要匹配参数，数据，代码，模型。</li>
+</ul>
+<p>如上所述，这些差别，git存在一定不足</p>
+<ul>
+<li>git建议的单个文件在50M，并不擅长管理操作大的文件，如几十G的文件</li>
+<li>git因为大数据上管理的不足，就无法管理与之相互关联的一连串的迭代变化</li>
+</ul>
+<p>是时候祭出DVC， data version control，数据版本管理工具。</p>
+<h2 id="2-%E4%BB%80%E4%B9%88%E6%98%AFdvc">2. 什么是DVC</h2>
+<p><img src="img/md-2020-09-06-00-05-34.png" alt=""></p>
+<p>dvc即data version control, 是一种针对人工智能项目（机器学习或者深度学习）的数据版本管理工具。DVC的操作和GIT类似，可以认为为GIT的二次开发封装。结合GIT，DVC可以有效的管理人工智能项目的整个流程，包括代码，数据，训练配置，模型。</p>
+<p>GIT和DVC分工如下：</p>
+<ul>
+<li>dvc：负责数据和模型等大文件的存储、下载等管理，同时生成元数据（.dvc文件）描述这些数据和模型， 并且串联整个人工智能项目工作流</li>
+<li>git：负责代码和dvc生成的元数据文件的版本管理</li>
+</ul>
+<h2 id="3-dvc%E6%93%8D%E4%BD%9C">3. DVC操作</h2>
+<h3 id="31%E5%AE%89%E8%A3%85">3.1.安装</h3>
+<pre class="hljs"><code><div>pip install dvc
+</div></code></pre>
+<h3 id="32%E6%95%B0%E6%8D%AE%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86">3.2.数据版本管理</h3>
+<h4 id="321-%E5%88%9D%E5%A7%8B%E5%8C%96">3.2.1 初始化</h4>
+<pre class="hljs"><code><div><span class="hljs-comment"># 到git目录下</span>
+git config --global user.name <span class="hljs-string">"xxxx"</span>
+git config --global user.email <span class="hljs-string">"xxxx@wedo.com"</span>
+git <span class="hljs-built_in">clone</span> ssh://git@101.81.238.21/<span class="hljs-built_in">test</span>/test.git
+<span class="hljs-built_in">cd</span> <span class="hljs-built_in">test</span>/
+
+<span class="hljs-comment"># dvc 初始化</span>
+dvc init
+<span class="hljs-comment"># 将dvc 初始化的文件提交 git</span>
+git commit -m <span class="hljs-string">"Initialize DVC"</span>
+
+<span class="hljs-comment"># 初始化后会在项目目录下生成.dvc文件夹，存储dvc相关的信息</span>
+.dvc
+├── config
+├── plots
+│   ├── confusion.json
+│   ├── default.json
+│   ├── scatter.json
+│   └── smooth.json
+└── tmp
+    └── index
+</div></code></pre>
+<h4 id="322-%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE">3.2.2 添加数据</h4>
+<p>可以通过<code>dvc add/git add</code>将数据和模型添加到版本管理中</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 假设数据在arch_train/model_zoo/nsfw_online_err.zip</span>
+dvc add arch_train/model_zoo/nsfw_online_err.zip
+git add arch_train/model_zoo/.gitignore arch_train/model_zoo/nsfw_online_err.zip.dvc
+
+
+<span class="hljs-comment"># .dvc 后缀为数据的元数据文件，默认为存储路径为.dvc/cache下</span>
+cat arch_train/model_zoo/nsfw_online_err.zip.dvc
+outs:
+- md5: 26eb560df48bf11ddf303135749b0c60
+  path: nsfw_online_err.zip
+
+.
+├── cache
+│   └── 26
+│       └── eb560df48bf11ddf303135749b0c60
+</div></code></pre>
+<h4 id="323-%E7%89%88%E6%9C%AC%E5%88%87%E6%8D%A2%E7%AE%A1%E7%90%86">3.2.3 版本切换管理</h4>
+<p>可以配合git的分支管理，来获取分支下不同的数据和模型。</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 切换分支</span>
+git checkout 分支名
+
+<span class="hljs-comment"># dvc通过git中的.dvc 文件，切换这个分支下数据</span>
+dvc checkout
+</div></code></pre>
+<h4 id="323-%E5%85%B1%E4%BA%AB%E4%BB%A3%E7%A0%81pushpull">3.2.3 共享代码（push/pull)</h4>
+<p>当多人开发时，<code>dvc push</code>会根据<code>config</code>中的远程主机配置，将数据push到远程主机。远程主机可以是ssh，http还有云盘存储等。</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 建立 远程服务 ssh或者http</span>
+<span class="hljs-comment"># 这里以本地的其他目录为例子</span>
+mkdir -p /tmp/dvc-storage
+dvc remote add -d myremote /tmp/dvc-storage
+git commit .dvc/config -m <span class="hljs-string">"Configure local remote"</span>
+<span class="hljs-comment"># 新建后 就会在`.dvc/config`存储远程主机访问的方式</span>
+vim config 
+[core]
+    remote = myremote
+[<span class="hljs-string">'remote "myremote"'</span>]
+    url = /tmp/dvc-storage
+
+<span class="hljs-comment"># dvc push 上传数据</span>
+dvc push
+
+<span class="hljs-comment"># 远程主机中数据是上传的一个备份</span>
+tree /tmp/dvc-storage/
+/tmp/dvc-storage/
+└── 26
+    └── eb560df48bf11ddf303135749b0c60
+
+1 directory, 1 file
+ls -l  /tmp/dvc-storage/26
+total 93400
+-r--r--r-- 1 root root 95640298 Sep  4 13:44 eb560df48bf11ddf303135749b0c60
+ls -lh  /tmp/dvc-storage/26
+total 92M
+-r--r--r-- 1 root root 92M Sep  4 13:44 eb560df48bf11ddf303135749b0c60
+
+</div></code></pre>
+<p>如果数据变更，同样dvc+git进行版本管理</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 数据变化</span>
+dvc add arch_train/model_zoo/nsfw_online_err.zip
+git commit arch_train/model_zoo/.gitignore arch_train/model_zoo/nsfw_online_err.zip.dvc -m <span class="hljs-string">"Dataset updates"</span>
+dvc push
+</div></code></pre>
+<p>当其他人想使用共享代码和数据时 <code>git clone</code> + <code>dvc pull</code></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 下载代码和数据.dvc</span>
+git <span class="hljs-built_in">clone</span> ssh://git@101.81.238.21/<span class="hljs-built_in">test</span>/test.git
+<span class="hljs-built_in">cd</span> <span class="hljs-built_in">test</span>/
+
+<span class="hljs-comment"># 根据.dvc和config远程主机配置，下载对应的数据和模型</span>
+dvc pull 
+</div></code></pre>
+<h3 id="33-%E4%B8%B2%E8%81%94%E5%B7%A5%E4%BD%9C%E6%B5%81">3.3 串联工作流</h3>
+<p>3.2中已经介绍了dvc的最常用的操作，可以看出操作和git的操作基本上吻合的，原理上可以和git对等。
+可以通过<code>dvc run</code>来建立训练和评估过程的依赖关系，即将输入的数据，预训练的模型，配置和输出的模型和训练脚本关联起来，可以很方面追溯执行过程， 每次关联dvc都会生成一个yaml配置来描述这个关联性。
+dvc run的主要参数</p>
+<ul>
+<li><code>-n</code> 操作的名称</li>
+<li><code>-p</code> 配置，可以是多个，文件或者文件夹</li>
+<li><code>-d</code> 操作依赖的数据，脚本和模型等，可以是多个，文件或者文件夹</li>
+<li><code>-o</code> 操作的输出，可以是多个，文件或者文件夹</li>
+<li>command： 执行操作的命令如python -u train.py</li>
+</ul>
+<pre class="hljs"><code><div>dvc run -n prepare \
+          -p prepare.seed,prepare.split \
+          -d src/prepare.py -d data/data.xml \
+          -o data/prepared \
+          python src/prepare.py data/data.xml
+</div></code></pre>
+<h2 id="4-%E6%80%BB%E7%BB%93">4. 总结</h2>
+<p>dvc把数据、模型、算法脚本和Metrics当成一次代码checkout，配合git就可以很方面的管理每一次训练的所有环节，还可以通过<code>dvc metrics show -T</code>来比较不同版本的模型性能。更多详细的dvc功能参见<code>https://dvc.org/doc/start</code>；欢迎交流讨论。
+总结如下</p>
+<ul>
+<li>dvc add/push/pull 管理数据</li>
+<li>dvc run 管理工作流串联</li>
+<li>建议一个模型迭代一个分支，该分支囊括代码，数据，模型，配置， 模型评估； 可以完美迭代模型优化，而处乱不惊。</li>
+</ul>
+
+</body>
+</html>
