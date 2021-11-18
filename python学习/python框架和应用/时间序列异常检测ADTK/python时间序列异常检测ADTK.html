@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>python时间序列异常检测ADTK.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="python%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8Badtk">python时间序列异常检测ADTK</h1>
+<h2 id="1-adtk%E7%AE%80%E4%BB%8B">1. adtk简介</h2>
+<p>智能运维AIOps的数据基本上都是时间序列形式的，而异常检测告警是AIOps中重要组成部分。笔者最近在处理时间序列数据时有使用到adtk这个python库，在这里和大家做下分享。</p>
+<p><strong>什么是adtk?</strong></p>
+<p>adtk（Anomaly Detection Toolkit）是无监督异常检测的python工具包，它提供常用算法和处理函数：</p>
+<ul>
+<li>简单有效的异常检测算法（detector）</li>
+<li>异常特征加工（transformers）</li>
+<li>处理流程控制（Pipe）</li>
+</ul>
+<h2 id="2-%E5%AE%89%E8%A3%85">2. 安装</h2>
+<pre class="hljs"><code><div>pip install adtk
+</div></code></pre>
+<h2 id="3-adtk%E6%95%B0%E6%8D%AE%E8%A6%81%E6%B1%82">3. adtk数据要求</h2>
+<p>时间序列的数据主要包括时间和相应的指标（如cpu，内存，数量等）。python中数据分析一般都是pandas的DataFrame，adtk要求输入数据的索引必须是<code>DatetimeIndex</code>。</p>
+<p>pandas提供了时间序列的时间生成和处理方法。</p>
+<ul>
+<li>
+<p>pd.date_range</p>
+<pre class="hljs"><code><div>stamps = pd.date_range(<span class="hljs-string">"2012-10-08 18:15:05"</span>, periods=<span class="hljs-number">4</span>, freq=<span class="hljs-string">"D"</span>)
+<span class="hljs-comment"># DatetimeIndex(['2012-10-08 18:15:05', '2012-10-09 18:15:05',</span>
+<span class="hljs-comment">#           '2012-10-10 18:15:05', '2012-10-11 18:15:05'],</span>
+<span class="hljs-comment">#          dtype='datetime64[ns]', freq='D')</span>
+</div></code></pre>
+</li>
+<li>
+<p>pd.Timestamp</p>
+<pre class="hljs"><code><div>tmp = pd.Timestamp(<span class="hljs-string">"2018-01-05"</span>) + pd.Timedelta(<span class="hljs-string">"1 day"</span>)
+print(tmp, tmp.timestamp(), tmp.strftime(<span class="hljs-string">'%Y-%m-%d'</span>))
+<span class="hljs-comment"># 2018-01-06 00:00:00 1515196800.0 2018-01-06</span>
+pd.Timestamp( tmp.timestamp(), unit=<span class="hljs-string">'s'</span>, tz=<span class="hljs-string">'Asia/Shanghai'</span>)
+<span class="hljs-comment"># Timestamp('2018-01-06 08:00:00+0800', tz='Asia/Shanghai')</span>
+</div></code></pre>
+</li>
+<li>
+<p>pd.to_datetime</p>
+</li>
+</ul>
+<p>adtk提供是<code>validate_series</code>来验证时间序列数据的有效性，如是否按时间顺序</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">from</span> adtk.data <span class="hljs-keyword">import</span> validate_series
+<span class="hljs-keyword">from</span> adtk.visualization <span class="hljs-keyword">import</span> plot
+df = pd.read_csv(<span class="hljs-string">'./data/nyc_taxi.csv'</span>, index_col=<span class="hljs-string">"timestamp"</span>, parse_dates=<span class="hljs-literal">True</span>)
+df = validate_series(df)
+plot(df)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-14-03-12.png" alt="">
+<img src="img/md-2021-03-28-14-02-54.png" alt=""></p>
+<h2 id="4-%E5%BC%82%E5%B8%B8%E7%89%B9%E5%BE%81%E5%8A%A0%E5%B7%A5transformers">4. 异常特征加工（transformers）</h2>
+<p>adtk中<code>transformers</code>提供了许多时间序列特征加工的方法：</p>
+<ul>
+<li>一般我们获取时间序列的特征，通常会按照时间窗口在滑动，采集时间窗口上的统计特征；</li>
+<li>还有对于季节性趋势做分解，区分哪些是季节性的部分，哪些是趋势的部分</li>
+<li>时间序列降维映射：对于细粒度的时间序列数据，数据量大，对于检测算法来说效率不高。降维方法能保留时间序列的主要趋势等特征同时，降低维数，提供时间效率。这个对于用CNN的方式来进行时间序列分类特别有效，adtk主要提供基于pca的降维和重构方法,主要应用于多维时间序列。</li>
+</ul>
+<h3 id="41-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3">4.1 滑动窗口</h3>
+<p>atdk提供单个宽口<code>RollingAggregate</code>和2个窗口<code>DoubleRollingAggregate</code>的滑动方式。统计特征支持均值，中位数，汇总，最大值，最小值，分位数， 方差，标准差，偏度，峰度，直方图 等，<code>['mean', 'median', 'sum', 'min', 'max', 'quantile', 'iqr', 'idr', 'count', 'nnz', 'nunique', 'std', 'var', 'skew', 'kurt', 'hist']</code>
+其中</p>
+<ul>
+<li>
+<p>'iqr': 是分位数 75% 和 25%差值</p>
+</li>
+<li>
+<p>'idr': 是分位数 90% 和 10%插值</p>
+</li>
+<li>
+<p>RollingAggregate</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">from</span> adtk.data <span class="hljs-keyword">import</span> validate_series
+<span class="hljs-keyword">from</span> adtk.transformer <span class="hljs-keyword">import</span> RollingAggregate
+<span class="hljs-keyword">from</span> adtk.transformer <span class="hljs-keyword">import</span> DoubleRollingAggregate
+s = pd.read_csv(<span class="hljs-string">'./data/nyc_taxi.csv'</span>, index_col=<span class="hljs-string">"timestamp"</span>, parse_dates=<span class="hljs-literal">True</span>)
+s = validate_series(s)
+
+s_transformed = RollingAggregate(agg=<span class="hljs-string">'quantile'</span>,agg_params={<span class="hljs-string">"q"</span>: [<span class="hljs-number">0.25</span>, <span class="hljs-number">0.75</span>]}, window=<span class="hljs-number">5</span>).transform(s)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-14-32-19.png" alt=""></p>
+</li>
+<li>
+<p>DoubleRollingAggregate
+提供了两个窗口之间统计特征的差异特征，如前5分钟和后5分钟，均值的差值等。<code>agg</code>参数和RollingAggregate中一致，新增的参数<code>diff</code>主要衡量差距的函数：</p>
+<ul>
+<li>'diff': 后减去前</li>
+<li>'rel_diff': Relative difference between values of aggregated metric
+(right minus left divided left). Only applicable if the aggregated
+metric is scalar.</li>
+<li>'abs_rel_diff': （后-前）/前， 相对差值</li>
+<li>'l1': l1正则</li>
+<li>'l2': l2正则</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">from</span> adtk.data <span class="hljs-keyword">import</span> validate_series
+<span class="hljs-keyword">from</span> adtk.transformer <span class="hljs-keyword">import</span> DoubleRollingAggregate
+s = pd.read_csv(<span class="hljs-string">'./data/ec2_cpu_utilization_53ea38.csv'</span>, index_col=<span class="hljs-string">"timestamp"</span>, parse_dates=<span class="hljs-literal">True</span>)
+s = validate_series(s)
+
+s_transformed = DoubleRollingAggregate(
+    agg=<span class="hljs-string">"median"</span>,
+    window=<span class="hljs-number">5</span>,
+    diff=<span class="hljs-string">"diff"</span>).transform(s)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-14-42-36.png" alt=""></p>
+</li>
+</ul>
+<h3 id="42-%E5%AD%A3%E8%8A%82%E6%80%A7%E6%8B%86%E8%A7%A3">4.2 季节性拆解</h3>
+<p>时间序列可拆解成趋势性，季节性和残差部分。atdk中<code>ClassicSeasonalDecomposition</code>提供了这三个部分拆解，并移除趋势和季节性部分，返回残差部分。</p>
+<ul>
+<li>freq: 设置季节性的周期</li>
+<li>trend： 可以设置是否保留趋势性</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.transformer <span class="hljs-keyword">import</span> ClassicSeasonalDecomposition
+
+s = pd.read_csv(<span class="hljs-string">'./data/nyc_taxi.csv'</span>, index_col=<span class="hljs-string">"timestamp"</span>, parse_dates=<span class="hljs-literal">True</span>)
+s = validate_series(s)
+
+s_transformed = ClassicSeasonalDecomposition().fit_transform(s)
+
+</div></code></pre>
+<p><img src="img/md-2021-03-28-15-33-38.png" alt=""></p>
+<pre class="hljs"><code><div>s_transformed = ClassicSeasonalDecomposition(trend=<span class="hljs-literal">True</span>).fit_transform(s)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-15-36-29.png" alt=""></p>
+<h3 id="43-%E9%99%8D%E7%BB%B4%E5%92%8C%E9%87%8D%E6%9E%84">4.3 降维和重构</h3>
+<p>adtk提供的pca对数据进行降维到主成分<code>PcaProjection</code>和重构方法<code>PcaReconstruction</code>。</p>
+<pre class="hljs"><code><div>df = pd.read_csv(<span class="hljs-string">'./data/generator.csv'</span>, index_col=<span class="hljs-string">"Time"</span>, parse_dates=<span class="hljs-literal">True</span>)
+df = validate_series(df)
+
+<span class="hljs-keyword">from</span> adtk.transformer <span class="hljs-keyword">import</span> PcaProjection
+s = PcaProjection(k=<span class="hljs-number">1</span>).fit_transform(df)
+plot(pd.concat([df, s], axis=<span class="hljs-number">1</span>), ts_linewidth=<span class="hljs-number">1</span>, ts_markersize=<span class="hljs-number">3</span>, curve_group=[(<span class="hljs-string">"Speed (kRPM)"</span>, <span class="hljs-string">"Power (kW)"</span>), <span class="hljs-string">"pc0"</span>]);
+
+</div></code></pre>
+<p><img src="img/md-2021-03-28-15-49-00.png" alt=""></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.transformer <span class="hljs-keyword">import</span> PcaReconstruction
+df_transformed = PcaReconstruction(k=<span class="hljs-number">1</span>).fit_transform(df).rename(columns={<span class="hljs-string">"Speed (kRPM)"</span>: <span class="hljs-string">"Speed reconstruction (kRPM)"</span>, <span class="hljs-string">"Power (kW)"</span>: <span class="hljs-string">"Power reconstruction (kW)"</span>})
+plot(pd.concat([df, df_transformed], axis=<span class="hljs-number">1</span>), ts_linewidth=<span class="hljs-number">1</span>, ts_markersize=<span class="hljs-number">3</span>, curve_group=[(<span class="hljs-string">"Speed (kRPM)"</span>, <span class="hljs-string">"Power (kW)"</span>), (<span class="hljs-string">"Speed reconstruction (kRPM)"</span>, <span class="hljs-string">"Power reconstruction (kW)"</span>)]);
+../_images/notebooks_demo_99_0.png
+</div></code></pre>
+<p><img src="img/md-2021-03-28-15-49-15.png" alt=""></p>
+<h2 id="5-%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95detector">5. 异常检测算法（detector）</h2>
+<p>adtk提供的主要是无监督或者基于规则的时间序列检测算法，可以用于常规的异常检测。</p>
+<ul>
+<li>检测离群点
+离群点是和普通数据差异极大的数据点。adtk主要提供了包括 <code>adtk.detector.ThresholdAD</code> <code>adtk.detector.QuantileAD</code> <code>adtk.detector.InterQuartileRangeAD</code> <code>adtk.detector.GeneralizedESDTestAD</code>的检测算法。
+<ul>
+<li>
+<p>ThresholdAD</p>
+<pre class="hljs"><code><div>adtk.detector.ThresholdAD(low=None, high=None)
+参数：
+low：下限，小于此值，视为异常
+high：上限，大于此值，视为异常
+原理：通过认为设定上下限来识别异常
+总结：固定阈值算法
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.detector <span class="hljs-keyword">import</span> ThresholdAD
+threshold_ad = ThresholdAD(high=<span class="hljs-number">30</span>, low=<span class="hljs-number">15</span>)
+anomalies = threshold_ad.detect(s)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-20-02-14.png" alt=""></p>
+</li>
+<li>
+<p>QuantileAD</p>
+<pre class="hljs"><code><div>adtk.detector.QuantileAD(low=None, high=None)
+参数：
+low：分位下限，范围(0,1)，当low=0.25时，表示Q1
+high：分位上限，范围(0,1)，当low=0.25时，表示Q3
+原理：通过历史数据计算出给定low与high对应的分位值Q_low,Q_high，小于Q_low或大于Q_high，视为异常
+总结：分位阈值算法
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.detector <span class="hljs-keyword">import</span> QuantileAD
+quantile_ad = QuantileAD(high=<span class="hljs-number">0.99</span>, low=<span class="hljs-number">0.01</span>)
+anomalies = quantile_ad.fit_detect(s)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-20-11-32.png" alt=""></p>
+</li>
+<li>
+<p>InterQuartileRangeAD</p>
+<pre class="hljs"><code><div>adtk.detector.InterQuartileRangeAD(c=3.0)
+参数：
+c：分位距的系数，用来确定上下限，可为float，也可为(float,float)
+原理：
+当c为float时，通过历史数据计算出 Q3+c*IQR 作为上限值，大于上限值视为异常
+当c=(float1,float2)时，通过历史数据计算出 (Q1-c1*IQR, Q3+c2*IQR) 作为正常范围，不在正常范围视为异常
+总结：箱线图算法
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.detector <span class="hljs-keyword">import</span> InterQuartileRangeAD
+iqr_ad = InterQuartileRangeAD(c=<span class="hljs-number">1.5</span>)
+anomalies = iqr_ad.fit_detect(s)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-19-55-06.png" alt=""></p>
+</li>
+<li>
+<p>GeneralizedESDTestAD</p>
+<pre class="hljs"><code><div>adtk.detector.GeneralizedESDTestAD(alpha=0.05)
+参数：
+alpha：显著性水平 (Significance level)，alpha越小，表示识别出的异常约有把握是真异常
+原理:将样本点的值与样本的均值作差后除以样本标准差，取最大值，通过t分布计算阈值，对比阈值确定异常点
+
+计算步骤简述：
+设置显著水平alpha，通常取0.05
+指定离群比例h，若h=5%，则表示50各样本中存在离群点数为2
+计算数据集的均值mu与标准差sigma，将所有样本与均值作差，取绝对值，再除以标准差，找出最大值，得到esd_1
+在剩下的样本点中，重复步骤3，可以得到h个esd值
+为每个esd值计算critical value: lambda_i (采用t分布计算)
+统计每个esd是否大于lambda_i，大于的认为你是异常
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.detector <span class="hljs-keyword">import</span> GeneralizedESDTestAD
+esd_ad = GeneralizedESDTestAD(alpha=<span class="hljs-number">0.3</span>)
+anomalies = esd_ad.fit_detect(s)
+</div></code></pre>
+<p><img src="img/md-2021-03-28-20-15-49.png" alt=""></p>
+</li>
+</ul>
+</li>
+<li>突变：Spike and Level Shift
+异常的表现形式不是离群点，而是通过和临近点的比较，即突增或者突降。adtk提供<code>adtk.detector.PersistAD</code> 和 <code>adtk.detector.LevelShiftAD </code>检测方法
+<ul>
+<li>PersistAD<pre class="hljs"><code><div>adtk.detector.PersistAD(window=1, c=3.0, side='both', min_periods=None, agg='median')
+参数：
+window：参考窗长度，可为int, str
+c：分位距倍数，用于确定上下限范围
+side：检测范围，为'positive'时检测突增，为'negative'时检测突降，为'both'时突增突降都检测
+min_periods：参考窗中最小个数，小于此个数将会报异常，默认为None，表示每个时间点都得有值
+agg：参考窗中的统计量计算方式，因为当前值是与参考窗中产生的统计量作比较，所以得将参考窗中的数据计算成统计量，默认'median'，表示去参考窗的中位值
+
+原理：
+用滑动窗口遍历历史数据，将窗口后的一位数据与参考窗中的统计量做差，得到一个新的时间序列s1;
+计算s1的(Q1-c*IQR, Q3+c*IQR) 作为正常范围；
+若当前值与它参考窗中的统计量之差，不在2中的正常范围内，视为异常。
+
+调参：
+window：越大，模型越不敏感，不容易被突刺干扰
+c：越大，对于波动大的数据，正常范围放大较大，对于波动较小的数据，正常范围放大较小
+min_periods：对缺失值的容忍程度，越大，越不允许有太多的缺失值
+agg：统计量的聚合方式，跟统计量的特性有关，如 'median'不容易受极端值影响
+总结：先计算一条新的时间序列，再用箱线图作异常检测
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.detector <span class="hljs-keyword">import</span> PersistAD
+persist_ad = PersistAD(c=<span class="hljs-number">3.0</span>, side=<span class="hljs-string">'positive'</span>)
+anomalies = persist_ad.fit_detect(s)
+</div></code></pre>
+<img src="img/md-2021-03-28-20-17-02.png" alt=""></li>
+<li>LevelShiftAD<pre class="hljs"><code><div>adtk.detector.LevelShiftAD(window, c=6.0, side='both', min_periods=None)
+
+参数：
+window：支持(10,5)，表示使用两个相邻的滑动窗，左侧的窗中的中位值表示参考值，右侧窗中的中位值表示当前值
+c：越大，对于波动大的数据，正常范围放大较大，对于波动较小的数据，正常范围放大较小，默认6.0
+side：检测范围，为'positive'时检测突增，为'negative'时检测突降，为'both'时突增突降都检测
+min_periods：参考窗中最小个数，小于此个数将会报异常，默认为None，表示每个时间点都得有值
+
+原理：
+该模型用于检测突变情况，相比于PersistAD，其抗抖动能力较强，不容易出现误报
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.detector <span class="hljs-keyword">import</span> LevelShiftAD
+level_shift_ad = LevelShiftAD(c=<span class="hljs-number">6.0</span>, side=<span class="hljs-string">'both'</span>, window=<span class="hljs-number">5</span>)
+anomalies = level_shift_ad.fit_detect(s)
+</div></code></pre>
+<img src="img/md-2021-03-28-20-18-03.png" alt=""></li>
+</ul>
+</li>
+<li>季节性
+<ul>
+<li>adtk.detector.SeasonalAD<pre class="hljs"><code><div>adtk.detector.SeasonalAD(freq=None, side='both', c=3.0, trend=False)
+SeasonalAD主要是根据ClassicSeasonalDecomposition来处理，判断。
+参数：
+freq：季节性周期
+c：越大，对于波动大的数据，正常范围放大较大，对于波动较小的数据，正常范围放大较小，默认6.0
+side：检测范围，为'positive'时检测突增，为'negative'时检测突降，为'both'时突增突降都检测
+trend： 是否考虑趋势
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.detector <span class="hljs-keyword">import</span> SeasonalAD
+seasonal_ad = SeasonalAD(c=<span class="hljs-number">3.0</span>, side=<span class="hljs-string">"both"</span>)
+anomalies = seasonal_ad.fit_detect(s)
+plot(s, anomaly=anomalies, ts_markersize=<span class="hljs-number">1</span>, anomaly_color=<span class="hljs-string">'red'</span>, anomaly_tag=<span class="hljs-string">"marker"</span>, anomaly_markersize=<span class="hljs-number">2</span>);
+</div></code></pre>
+<img src="img/md-2021-03-28-20-18-51.png" alt=""></li>
+</ul>
+</li>
+<li>pipe 组合算法<pre class="hljs"><code><div><span class="hljs-keyword">from</span> adtk.pipe <span class="hljs-keyword">import</span> Pipeline
+steps = [
+    (<span class="hljs-string">"deseasonal"</span>, ClassicSeasonalDecomposition()),
+    (<span class="hljs-string">"quantile_ad"</span>, QuantileAD(high=<span class="hljs-number">0.995</span>, low=<span class="hljs-number">0.005</span>))
+]
+pipeline = Pipeline(steps)
+anomalies = pipeline.fit_detect(s)
+plot(s, anomaly=anomalies, ts_markersize=<span class="hljs-number">1</span>, anomaly_markersize=<span class="hljs-number">2</span>, anomaly_tag=<span class="hljs-string">"marker"</span>, anomaly_color=<span class="hljs-string">'red'</span>);
+</div></code></pre>
+<img src="img/md-2021-03-28-20-22-46.png" alt=""></li>
+</ul>
+<h2 id="6-%E6%80%BB%E7%BB%93">6. 总结</h2>
+<p>本文介绍了时间序列异常检测的无监督算法工具包ADTK。ADTK提供了简单的异常检测算法和时间序列特征加工函数，希望对你有帮助。总结如下：</p>
+<ul>
+<li>adtk要求输入数据为datetimeIndex，<code>validate_series</code>来验证数据有效性，使得时间有序</li>
+<li>adtk单窗口和double窗口滑动，加工统计特征</li>
+<li>adtk分解时间序列的季节部分，获得时间序列的残差部分，可根据这个判断异常点</li>
+<li>adtk支持离群点、突变和季节性异常检测。通过<code>fit_detect</code> 获取异常点序列，也可以通过<code>Pipeline</code>联通多部异常检测算法</li>
+</ul>
+
+</body>
+</html>

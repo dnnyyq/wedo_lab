@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Streamlit.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E7%94%A8%E7%BA%AFpython%E5%86%99web-appstreamlit">用纯python写web app：Streamlit：</h1>
+<p>个人简介：
+wedo实验君, 数据分析师；热爱生活，热爱写作</p>
+<h2 id="1-streamlit">1. Streamlit</h2>
+<p>一句话，Streamlit是一个可以用python编写web app的库，可以方便的动态展示你的机器学习的项目。</p>
+<p>优点</p>
+<ul>
+<li>你不需要懂html， css， js等，纯python语言编写web app</li>
+<li>包括web常用组件：文本框， 按钮，单选框，复选框， 下拉框，多媒体（图片，视频）和文件上传等</li>
+</ul>
+<p>应用场景</p>
+<ul>
+<li>可以动态的探索数据</li>
+<li>可以方便动态展示你的机器学习成果（可以和jupyter notebook做个比较）</li>
+</ul>
+<blockquote>
+<p>https://github.com/streamlit/streamlit</p>
+</blockquote>
+<h2 id="2-%E5%AE%89%E8%A3%85">2. 安装</h2>
+<pre class="hljs"><code><div>pip install streamlit
+</div></code></pre>
+<pre class="hljs"><code><div>streamlit hello
+
+<span class="hljs-comment"># 启动web app</span>
+<span class="hljs-comment"># streamlit run [filename]</span>
+streamlit run app.py
+
+<span class="hljs-comment"># You can now view your Streamlit app in your browser.</span>
+<span class="hljs-comment"># Local URL: http://localhost:8501</span>
+</div></code></pre>
+<h2 id="3-%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D">3. 基本组件介绍</h2>
+<h3 id="31-%E5%B8%83%E5%B1%80">3.1 布局</h3>
+<p>web中通常有布局layout css, 如Bootstrap中的12列删格系统；streamlit最多只有左右两栏，通常是一栏。 通过<code>st.sidebar</code>添加侧边栏，通常可作为菜单，选择控制操作。在上下结构上，streamlit按照代码顺序从上到下，依次布局</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> time
+<span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> datetime
+<span class="hljs-comment"># 侧边栏</span>
+st.sidebar.title(<span class="hljs-string">'菜单侧边栏'</span>)
+add_selectbox = st.sidebar.selectbox(
+    <span class="hljs-string">"这个是下拉框，请选择?"</span>,
+    (<span class="hljs-string">"1"</span>, <span class="hljs-string">"Home 2"</span>, <span class="hljs-string">"Mobile 2"</span>)
+)
+<span class="hljs-comment"># 主栏</span>
+st.title(<span class="hljs-string">'Steamlit 机器学习web app'</span>)
+</div></code></pre>
+<p><img src="img/md-2020-05-28-19-06-39.png" alt=""></p>
+<h3 id="32-text">3.2 text</h3>
+<p>streamlit提供了许多文本显示命令，还支持markdown语法</p>
+<pre class="hljs"><code><div>st.header(<span class="hljs-string">'1. text文本显示'</span>)
+st.markdown(<span class="hljs-string">'Streamlit is **_really_ cool**.'</span>)
+st.text(<span class="hljs-string">'This is some text.'</span>)
+st.subheader(<span class="hljs-string">'This is a subheader'</span>)
+st.write(<span class="hljs-string">"st.write 可以写很多东西哦"</span>)
+st.warning(<span class="hljs-string">'This is a warning'</span>)
+</div></code></pre>
+<h3 id="33-%E8%A1%A8%E5%8D%95%E6%8E%A7%E4%BB%B6">3.3 表单控件</h3>
+<p>streamlit提供丰富的表单控件，如按钮，单选框，复选框，下拉框，文本框和文件上传。
+用法提炼如下：</p>
+<ul>
+<li>函数调用为定义显示控件，返回值是表示是否触发，或者触发返回结果；比如按钮，<code>st.button('Say hello')</code>定义了一个按钮， 如果按下按钮返回True，否则为False</li>
+</ul>
+<pre class="hljs"><code><div>st.markdown(<span class="hljs-string">'- 按钮'</span>)
+<span class="hljs-keyword">if</span> st.button(<span class="hljs-string">'Say hello'</span>):
+    st.write(<span class="hljs-string">'Why hello there'</span>)
+
+st.markdown(<span class="hljs-string">'- 单选框'</span>)
+genre = st.radio(
+     <span class="hljs-string">"选择你喜欢的？"</span>,
+    (<span class="hljs-string">'Comedy'</span>, <span class="hljs-string">'Drama'</span>, <span class="hljs-string">'Documentary'</span>))
+
+st.write(<span class="hljs-string">'你选择了：'</span>, genre)
+ 
+
+st.markdown(<span class="hljs-string">'- 复选框'</span>)    
+agree = st.checkbox(<span class="hljs-string">'I agree'</span>)
+<span class="hljs-keyword">if</span> agree:
+    st.write(<span class="hljs-string">'感谢你同意了'</span>)
+
+
+
+st.markdown(<span class="hljs-string">'- 下拉框'</span>) 
+option = st.selectbox(
+    <span class="hljs-string">'你喜欢的联系方式?'</span>,
+   (<span class="hljs-string">'Email'</span>, <span class="hljs-string">'Home phone'</span>, <span class="hljs-string">'Mobile phone'</span>))
+
+st.write(<span class="hljs-string">'你选择了:'</span>, option)
+
+st.markdown(<span class="hljs-string">'- 多选下拉框'</span>) 
+options = st.multiselect(
+    <span class="hljs-string">'What are your favorite colors'</span>,
+    [<span class="hljs-string">'Green'</span>, <span class="hljs-string">'Yellow'</span>, <span class="hljs-string">'Red'</span>, <span class="hljs-string">'Blue'</span>],
+    [<span class="hljs-string">'Yellow'</span>, <span class="hljs-string">'Red'</span>])
+
+st.write(<span class="hljs-string">'你选择了:'</span>, options)
+
+st.markdown(<span class="hljs-string">'- slider'</span>) 
+values = st.slider(
+    <span class="hljs-string">'Select a range of values'</span>,
+    <span class="hljs-number">0.0</span>, <span class="hljs-number">100.0</span>, (<span class="hljs-number">25.0</span>, <span class="hljs-number">75.0</span>))
+st.write(<span class="hljs-string">'Values:'</span>, values)
+
+
+st.markdown(<span class="hljs-string">'- 文本输入'</span>) 
+title = st.text_input(<span class="hljs-string">'Movie title'</span>, <span class="hljs-string">'Life of Brian'</span>)
+st.write(<span class="hljs-string">'The current movie title is'</span>, title)
+
+txt = st.text_area(<span class="hljs-string">'Text to analyze'</span>, <span class="hljs-string">'''
+    It was the best of times, it was the worst of times, it was
+    the age of wisdom, it was the age of foolishness, it was
+    the epoch of belief, it was the epoch of incredulity, it
+    was the season of Light, it was the season of Darkness, it
+    was the spring of hope, it was the winter of despair, (...)
+    '''</span>)
+
+
+st.markdown(<span class="hljs-string">'- 日期与时间'</span>)
+d = st.date_input(
+    <span class="hljs-string">"生日"</span>,
+    datetime.date(<span class="hljs-number">2019</span>, <span class="hljs-number">7</span>, <span class="hljs-number">6</span>))
+st.write(<span class="hljs-string">'Your birthday is:'</span>, d)
+
+t = st.time_input(<span class="hljs-string">'闹钟'</span>, datetime.time(<span class="hljs-number">8</span>, <span class="hljs-number">45</span>))
+st.write(<span class="hljs-string">'闹钟为：'</span>, t)
+
+st.markdown(<span class="hljs-string">'- 上传文件'</span>)
+uploaded_file = st.file_uploader(<span class="hljs-string">"Choose a CSV file"</span>, type=<span class="hljs-string">"csv"</span>)
+<span class="hljs-keyword">if</span> uploaded_file <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+    data = pd.read_csv(uploaded_file)
+    st.write(data)
+</div></code></pre>
+<p><img src="img/md-2020-05-29-13-10-52.png" alt=""></p>
+<h3 id="34-%E5%9B%BE%E5%83%8F">3.4 图像</h3>
+<p>常用的图像库都支持，通过<code>st.image</code>展示图片</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> cv2
+img = cv2.imread(<span class="hljs-string">'sunrise.jpg'</span>)
+st.image(img[...,::<span class="hljs-number">-1</span>], caption=<span class="hljs-string">'Sunrise by the mountains'</span>,
+        use_column_width=<span class="hljs-literal">True</span>)
+</div></code></pre>
+<h3 id="35-%E5%9B%BE%E8%A1%A8">3.5 图表</h3>
+<ul>
+<li>支持pandas中的dataframe展示图表（折线图，面积图和柱状图）</li>
+</ul>
+<pre class="hljs"><code><div>st.subheader(<span class="hljs-string">'4.1 dataframe图表'</span>)
+<span class="hljs-meta">@st.cache(persist=True)</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_data</span><span class="hljs-params">()</span>:</span>
+    df = pd.DataFrame(
+    np.random.randn(<span class="hljs-number">200</span>, <span class="hljs-number">3</span>),
+    columns=[<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>])
+    <span class="hljs-keyword">return</span> df
+df = get_data()
+<span class="hljs-comment"># st.table(df)</span>
+st.dataframe(df) 
+st.line_chart(df)
+st.area_chart(df)
+st.bar_chart(df)
+</div></code></pre>
+<ul>
+<li>还支持matplotlib的图表展示，这个你应该很熟悉</li>
+</ul>
+<pre class="hljs"><code><div>plt.plot(df.a, df.b)
+st.pyplot()
+</div></code></pre>
+<p><img src="img/md-2020-05-29-13-47-20.png" alt=""></p>
+<h3 id="36-%E7%BC%93%E5%AD%98">3.6 缓存</h3>
+<p>streamlit中数据的缓存使用<code>st.cache</code>装饰器来修饰， 注意是作用于函数。缓存的好处顾名思义就是避免每次刷新的时候都要重新加载数据。</p>
+<pre class="hljs"><code><div><span class="hljs-meta">@st.cache(persist=True)</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_data</span><span class="hljs-params">()</span>:</span>
+    df = pd.DataFrame(
+    np.random.randn(<span class="hljs-number">200</span>, <span class="hljs-number">3</span>),
+    columns=[<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>])
+    <span class="hljs-keyword">return</span> df
+</div></code></pre>
+<h2 id="4-%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AEdemo">4. 动态数据demo</h2>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+<span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-comment"># 侧边栏</span>
+st.sidebar.title(<span class="hljs-string">'请选择过滤条件'</span>)
+time = st.sidebar.time_input(<span class="hljs-string">'大于时间'</span>, datetime.time(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>))
+
+values = st.sidebar.slider(
+    <span class="hljs-string">'速度'</span>,
+    <span class="hljs-number">0.0</span>, <span class="hljs-number">200.0</span>, (<span class="hljs-number">25.0</span>, <span class="hljs-number">75.0</span>))
+<span class="hljs-comment"># 主栏</span>
+st.title(<span class="hljs-string">'数据探索'</span>)
+<span class="hljs-meta">@st.cache(persist=True)</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_data</span><span class="hljs-params">()</span>:</span>
+    file = <span class="hljs-string">'./7000.csv'</span>
+    <span class="hljs-keyword">return</span> pd.read_csv(file, header=<span class="hljs-number">0</span>)
+data = get_data()
+<span class="hljs-comment"># print(values)</span>
+display_data = data[data[<span class="hljs-string">'time'</span>] &gt; str(time)]
+display_data = display_data[(display_data[<span class="hljs-string">'速度'</span>] &gt; values[<span class="hljs-number">0</span>]) &amp; (display_data[<span class="hljs-string">'速度'</span>] &lt; values[<span class="hljs-number">1</span>])]
+st.line_chart(display_data[[<span class="hljs-string">'方向'</span>, <span class="hljs-string">'速度'</span>]])
+</div></code></pre>
+<p><img src="img/md-2020-05-30-00-49-21.png" alt=""></p>
+<h2 id="5-%E6%9C%BA%E5%99%A8%E8%A7%86%E8%A7%89%E9%A1%B9%E7%9B%AEdemo">5. 机器视觉项目demo</h2>
+<p>这个例子我们用<code>人脸检测</code>来说明下机器视觉项目的展示。</p>
+<ul>
+<li>功能：上传一张图片，检测出人脸框</li>
+<li>人脸检测算法来自facenet项目<code>https://github.com/davidsandberg/facenet/tree/master/src/align</code>中的MTCNN算法</li>
+<li>布局为左右布局，左边为上传空间， 右边是展示</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+<span class="hljs-keyword">import</span> time
+<span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> datetime
+<span class="hljs-keyword">import</span> cv2
+<span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image
+<span class="hljs-keyword">import</span> io
+<span class="hljs-keyword">from</span> face_detect.mtcnn_tf <span class="hljs-keyword">import</span> MTCNN
+
+<span class="hljs-comment"># 侧边栏</span>
+st.sidebar.title(<span class="hljs-string">'请上传一张照片，开始检测'</span>)
+uploaded_file = st.sidebar.file_uploader(<span class="hljs-string">""</span>, type=<span class="hljs-string">"jpg"</span>)
+
+<span class="hljs-comment"># 主栏</span>
+st.title(<span class="hljs-string">'人脸检测'</span>)
+<span class="hljs-meta">@st.cache()</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">init_model</span><span class="hljs-params">()</span>:</span>
+    mtcnn = MTCNN()
+    <span class="hljs-keyword">return</span> mtcnn
+
+detect = init_model()
+<span class="hljs-keyword">if</span> uploaded_file <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+    <span class="hljs-comment"># print(uploaded_file)</span>
+    data = np.array(Image.open(io.BytesIO(uploaded_file.read())))
+    _, bboxs, _, _ = detect.run(data, detect_multiple_faces=<span class="hljs-literal">True</span>, margin=<span class="hljs-number">0</span>)
+    <span class="hljs-comment"># display bbox and landmarks</span>
+    <span class="hljs-keyword">for</span> idx, landmark <span class="hljs-keyword">in</span> enumerate(landmarks):
+        bbox = bboxs[idx]
+        cv2.rectangle(data, (bbox[<span class="hljs-number">1</span>], bbox[<span class="hljs-number">0</span>]),
+                      (bbox[<span class="hljs-number">3</span>], bbox[<span class="hljs-number">2</span>]), (<span class="hljs-number">0</span>, <span class="hljs-number">2255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
+    st.image(data, caption=<span class="hljs-string">'image'</span>, use_column_width=<span class="hljs-literal">False</span>)
+</div></code></pre>
+<p><img src="img/md-2020-05-30-00-51-46.png" alt=""></p>
+<h2 id="6-%E6%80%BB%E7%BB%93">6. 总结</h2>
+<p>是不是觉得很方便，分分钟就可以构建一个web app来展示你的项目。希望对你有帮助, 快动起手来吧!
+摘要如下：</p>
+<ul>
+<li>数据记得要用缓存<code>@st.cache()</code></li>
+<li>streamlit可以支持matplotlib</li>
+<li>streamlit有漂亮的表单控件，函数的返回值就是触发的值</li>
+<li>streamlit支持markdown</li>
+</ul>
+<p>官方提供了其他复杂的demo（官方推荐用函数的方式的封装业务，这里也推荐， 本文主要是为了说明功能，采用比较直观的方式来编写）</p>
+<ul>
+<li>https://github.com/streamlit/demo-face-gan</li>
+<li>https://github.com/streamlit/demo-self-driving</li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>scrapy爬虫.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="scrapy-%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6">scrapy 爬虫框架</h1>
+<p>个人简介：
+wedo实验君, 数据分析师；热爱生活，热爱写作</p>
+<h2 id="1-scrapy%E7%AE%80%E4%BB%8B">1. scrapy简介</h2>
+<p>scrapy是基于事件驱动的Twisted框架下用纯python写的爬虫框架。很早之前就开始用scrapy来爬取网络上的图片和文本信息，一直没有把细节记录下来。这段时间，因为工作需要又重拾scrapy爬虫，本文和大家分享下，包你一用就会， 欢迎交流。</p>
+<h3 id="11-scrapy%E6%A1%86%E6%9E%B6">1.1 scrapy框架</h3>
+<p>scrapy框架包括5个主要的组件和2个中间件Hook。</p>
+<ul>
+<li>ENGIINE： 整个框架的控制中心， 控制整个爬虫的流程。根据不同的条件添加不同的事件（就是用的Twisted）</li>
+<li>SCHEDULER： 事件调度器</li>
+<li>DOWNLOADER：接收爬虫请求，从网上下载数据</li>
+<li>SPIDERS：发起爬虫请求，并解析<code>DOWNLOADER</code>返回的网页内容，同时和数据持久化进行交互,<code>需要开发者编写</code></li>
+<li>ITEM PIPELINES：接收<code>SPIDERS</code>解析的结构化的字段，进行持久化等操作，<code>需要开发者编写</code></li>
+<li>MIDDLEWARES： <code>ENGIINE</code>和<code>SPIDERS</code>, <code>ENGIINE</code>和<code>DOWNLOADER</code>之间一些额外的操作，hook的方式提供给开发者</li>
+</ul>
+<p>从上可知，我们只要实现<code>SPIDERS</code>（要爬什么网站，怎么解析）和<code>ITEM PIPELINES</code>（如何处理解析后的内容）就可以了。其他的都是有框架帮你完成了。（图片来自网络，如果侵权联系必删）</p>
+<p><img src="img/md-2020-12-04-16-25-38.png" alt=""></p>
+<h3 id="12-scrapy%E6%95%B0%E6%8D%AE%E6%B5%81">1.2 scrapy数据流</h3>
+<p>我们再详细看下组件之间的数据流，会更清楚框架的内部运作。（图片来自网络，如果侵权联系必删）</p>
+<p><img src="img/md-2020-12-04-16-48-30.png" alt=""></p>
+<ul>
+<li>
+<ol>
+<li><code>SPIDERS</code>发爬虫请求给<code>ENGIINE</code>， 告诉它任务来了</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li><code>ENGIINE</code>将请求添加到<code>SCHEDULER</code>调度队列里, 说任务就交给你了，给我安排好</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li><code>SCHEDULER</code>看看手里的爬取请求很多，挑一个给<code>ENGIINE</code>， 说大哥帮忙转发给下载<code>DOWNLOADER</code></li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li><code>ENGIINE</code>： 好的， <code>DOWNLOADER</code>你的任务来了</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li><code>DOWNLOADER</code>： 开始下载了，下载好了，任务结果 交给<code>ENGIINE</code></li>
+</ol>
+</li>
+<li>
+<ol start="6">
+<li><code>ENGIINE</code>将结果给<code>SPIDERS</code>， 你的一个请求下载好了，快去解析吧</li>
+</ol>
+</li>
+<li>
+<ol start="7">
+<li><code>SPIDERS</code>： 好的，解析产生了结果字段。又给<code>SPIDERS</code>转发给<code>ITEM PIPELINES</code></li>
+</ol>
+</li>
+<li>
+<ol start="8">
+<li><code>ITEM PIPELINES</code>: 接收到字段内容，保存起来。</li>
+</ol>
+</li>
+</ul>
+<p>第1步到第8步，一个请求终于完成了。是不是觉得很多余？<code>ENGIINE</code>夹在中间当传话筒，能不能直接跳过？ 可以考虑跳过了会怎么样。</p>
+<p>这里分析一下</p>
+<ul>
+<li><code>SCHEDULER</code>的作用： 任务调度， 控制任务的并发，防止机器处理不过来</li>
+<li><code>ENGIINE</code>： 就是基于<code>Twisted</code>框架, 当事件来（比如转发请求）的时候，通过回调的方式来执行对应的事件。我觉得<code>ENGIINE</code>让所有操作变的统一，都是按照事件的方式来组织其他组件， 其他组件以低耦合的方式运作； 对于一种框架来说，无疑是必备的。</li>
+</ul>
+<h2 id="2-%E5%9F%BA%E7%A1%80xpath">2. 基础：XPath</h2>
+<p>写爬虫最重要的是解析网页的内容，这个部分就介绍下通过<code>XPath</code>来解析网页，提取内容。</p>
+<h3 id="21-html%E8%8A%82%E7%82%B9%E5%92%8C%E5%B1%9E%E6%80%A7">2.1 HTML节点和属性</h3>
+<p>（图片来自网络，如果侵权联系必删）</p>
+<p><img src="img/md-2020-12-01-14-20-08.png" alt=""></p>
+<h3 id="22-%E8%A7%A3%E6%9E%90%E8%AF%AD%E6%B3%95">2.2 解析语法</h3>
+<ul>
+<li>a / b： ‘/’在 xpath里表示层级关系，左边的 a是父节点，右边的 b是子节点</li>
+<li>a // b： 表示a下所有b，直接或者间接的</li>
+<li>[@]：选择具有某个属性的节点
+<ul>
+<li>//div[@classs], //a[@x]：选择具有 class属性的 div节点、选择具有 x属性的 a节点</li>
+<li>//div[@class=&quot;container&quot;]：选择具有 class属性的值为 container的 div节点</li>
+</ul>
+</li>
+<li>//a[contains(@id, &quot;abc&quot;)]：选择 id属性里有 abc的 a标签</li>
+</ul>
+<p><strong>一个例子</strong></p>
+<pre class="hljs"><code><div>response.xpath(<span class="hljs-string">'//div[@class="taglist"]/ul//li//a//img/@data-original'</span>).get_all()
+<span class="hljs-comment"># 获取所有class属性（css）为taglist的div， 下一个层ul下的所有li下所有a下所有img标签下data-original属性</span>
+
+<span class="hljs-comment"># data-original这里放的是图片的url地址</span>
+</div></code></pre>
+<p><strong>更多详见</strong></p>
+<blockquote>
+<p>http://zvon.org/comp/r/tut-XPath_1.html#Pages~List_of_XPaths</p>
+</blockquote>
+<h2 id="3-%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2">3. 安装部署</h2>
+<p>Scrapy 是用纯python编写的，它依赖于几个关键的python包（以及其他包）：</p>
+<ul>
+<li>lxml 一个高效的XML和HTML解析器</li>
+<li>parsel ，一个写在lxml上面的html/xml数据提取库,</li>
+<li>w3lib ，用于处理URL和网页编码的多用途帮助程序</li>
+<li>twisted 异步网络框架</li>
+<li>cryptography 和 pyOpenSSL ，处理各种网络级安全需求</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#</span><span class="bash"> 安装</span>
+pip install scrapy
+</div></code></pre>
+<h2 id="4-%E5%88%9B%E5%BB%BA%E7%88%AC%E8%99%AB%E9%A1%B9%E7%9B%AE">4. 创建爬虫项目</h2>
+<pre class="hljs"><code><div>scrapy startproject sexy
+<span class="hljs-meta">
+#</span><span class="bash"> 创建一个后的项目目录</span>
+<span class="hljs-meta">#</span><span class="bash"> sexy</span>
+<span class="hljs-meta">#</span><span class="bash"> │  scrapy.cfg</span>
+<span class="hljs-meta">#</span><span class="bash"> │</span>
+<span class="hljs-meta">#</span><span class="bash"> └─sexy</span>
+<span class="hljs-meta">#</span><span class="bash">     │  items.py</span>
+<span class="hljs-meta">#</span><span class="bash">     │  middlewares.py</span>
+<span class="hljs-meta">#</span><span class="bash">     │  pipelines.py</span>
+<span class="hljs-meta">#</span><span class="bash">     │  settings.py</span>
+<span class="hljs-meta">#</span><span class="bash">     │  __init__.py</span>
+<span class="hljs-meta">#</span><span class="bash">     │</span>
+<span class="hljs-meta">#</span><span class="bash">     ├─spiders</span>
+<span class="hljs-meta">#</span><span class="bash">     │  │  __init__.py</span>
+<span class="hljs-meta">#</span><span class="bash">     │  │</span>
+<span class="hljs-meta">#</span><span class="bash">     │  └─__pycache__</span>
+<span class="hljs-meta">#</span><span class="bash">     └─__pycache__</span>
+<span class="hljs-meta">
+#</span><span class="bash"> 执行 需要到scrapy.cfg同级别的目录执行</span>
+scrapy crawl sexy
+</div></code></pre>
+<p>从上可知，我们要写的是<code>spiders</code>里的具体的spider类和<code>items.py和pipelines.py</code>（对应的<code>ITEM PIPELINES</code>）</p>
+<h2 id="5-%E5%BC%80%E5%A7%8Bscrapy%E7%88%AC%E8%99%AB">5. 开始scrapy爬虫</h2>
+<h3 id="51-%E7%AE%80%E5%8D%95%E8%80%8C%E5%BC%BA%E5%A4%A7%E7%9A%84spider">5.1 简单而强大的spider</h3>
+<p>这里实现的功能是从图片网站中下载图片，保存在本地， url做了脱敏。需要注意的点在注释要标明</p>
+<ul>
+<li>类要继承 <code>scrapy.Spider</code></li>
+<li>取一个唯一的name</li>
+<li>爬取的网站url加到start_urls列表里</li>
+<li>重写<code>parse</code>利用xpath解析reponse的内容</li>
+</ul>
+<p>可以看到<code>parse</code>实现的时候没有转发给<code>ITEM PIPELINES</code>，直接处理了。这样简单的可以这么处理，如果业务很复杂，建议交给<code>ITEM PIPELINES</code>。 后面会给例子</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 目录结果为：spiders/sexy_spider.py</span>
+<span class="hljs-keyword">import</span> scrapy
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> requests
+<span class="hljs-keyword">import</span> time
+
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">download_from_url</span><span class="hljs-params">(url)</span>:</span>
+    response = requests.get(url, stream=<span class="hljs-literal">True</span>)
+    <span class="hljs-keyword">if</span> response.status_code == requests.codes.ok:
+        <span class="hljs-keyword">return</span> response.content
+    <span class="hljs-keyword">else</span>:
+        print(<span class="hljs-string">'%s-%s'</span> % (url, response.status_code))
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SexySpider</span><span class="hljs-params">(scrapy.Spider)</span>:</span>
+   <span class="hljs-comment"># 如果有多个spider， name要唯一</span>
+    name = <span class="hljs-string">'sexy'</span>
+    allowed_domains = [<span class="hljs-string">'uumdfdfnt.94demo.com'</span>]
+    allowed_urls = [<span class="hljs-string">'http://uumdfdfnt.94demo.com/'</span>]
+
+    <span class="hljs-comment"># 需要爬取的网站url加到start_urls list里</span>
+    start_urls = [<span class="hljs-string">'http://uumdfdfnt.94demo.com/tag/dingziku/index.html'</span>]
+    save_path = <span class="hljs-string">'/home/sexy/dingziku'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parse</span><span class="hljs-params">(self, response)</span>:</span>
+        <span class="hljs-comment"># 解析网站，获取图片列表</span>
+        img_list = response.xpath(<span class="hljs-string">'//div[@class="taglist"]/ul//li//a//img/@data-original'</span>).getall()
+        time.sleep(<span class="hljs-number">1</span>)
+
+        <span class="hljs-comment"># 处理图片， 具体业务操作， 可交给items， 见5.2 items例子</span>
+        <span class="hljs-keyword">for</span> img_url <span class="hljs-keyword">in</span> img_list:
+            file_name = img_url.split(<span class="hljs-string">'/'</span>)[<span class="hljs-number">-1</span>]
+            content = download_from_url(img_url)
+            <span class="hljs-keyword">if</span> content <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+                <span class="hljs-keyword">with</span> open(os.path.join(self.save_path, file_name), <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> fw:
+                    fw.write(content)
+
+        <span class="hljs-comment"># 自动下一页（见5.3 自动下一页）</span>
+        next_page = response.xpath(<span class="hljs-string">'//div[@class="page both"]/ul/a[text()="下一页"]/@href'</span>).get()
+        <span class="hljs-keyword">if</span> next_page <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+            next_page = response.urljoin(next_page)
+            <span class="hljs-keyword">yield</span> scrapy.Request(next_page, callback=self.parse)
+</div></code></pre>
+<h3 id="52-items%E5%92%8Cpipline%E4%BE%8B%E5%AD%90">5.2 items和pipline例子</h3>
+<p>这里说明下两个的作用</p>
+<ul>
+<li>items： 提供一个字段存储， spider会将数据存在这里</li>
+<li>pipline： 会从items取数据，进行业务操作，比如5.1中的保存图片；又比如存储到数据库中等</li>
+</ul>
+<p>我们来改写下上面的例子</p>
+<ul>
+<li><strong>items.py</strong>
+其实就是定义字段<code>scrapy.Field()</code></li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> scrapy
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SexyItem</span><span class="hljs-params">(scrapy.Item)</span>:</span>
+    <span class="hljs-comment"># define the fields for your item here like:</span>
+    <span class="hljs-comment"># name = scrapy.Field()</span>
+    img_url = scrapy.Field()
+</div></code></pre>
+<ul>
+<li><strong>spiders/sexy_spider.py</strong></li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> scrapy
+<span class="hljs-keyword">import</span> os
+<span class="hljs-comment"># 导入item</span>
+<span class="hljs-keyword">from</span> ..items <span class="hljs-keyword">import</span> SexyItem
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SexySpider</span><span class="hljs-params">(scrapy.Spider)</span>:</span>
+   <span class="hljs-comment"># 如果有多个spider， name要唯一</span>
+    name = <span class="hljs-string">'sexy'</span>
+    allowed_domains = [<span class="hljs-string">'uumdfdfnt.94demo.com'</span>]
+    allowed_urls = [<span class="hljs-string">'http://uumdfdfnt.94demo.com/'</span>]
+
+    <span class="hljs-comment"># 需要爬取的网站url加到start_urls list里</span>
+    start_urls = [<span class="hljs-string">'http://uumdfdfnt.94demo.com/tag/dingziku/index.html'</span>]
+    save_path = <span class="hljs-string">'/home/sexy/dingziku'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parse</span><span class="hljs-params">(self, response)</span>:</span>
+        <span class="hljs-comment"># 解析网站，获取图片列表</span>
+        img_list = response.xpath(<span class="hljs-string">'//div[@class="taglist"]/ul//li//a//img/@data-original'</span>).getall()
+        time.sleep(<span class="hljs-number">1</span>)
+
+        <span class="hljs-comment"># 处理图片， 具体业务操作， 可交给yield items</span>
+        <span class="hljs-keyword">for</span> img_url <span class="hljs-keyword">in</span> img_list:
+            items = SexyItem()
+            items[<span class="hljs-string">'img_url'</span>] = img_url
+            <span class="hljs-keyword">yield</span> items
+</div></code></pre>
+<ul>
+<li><strong>pipelines.py</strong></li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> requests
+
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">download_from_url</span><span class="hljs-params">(url)</span>:</span>
+    response = requests.get(url, stream=<span class="hljs-literal">True</span>)
+    <span class="hljs-keyword">if</span> response.status_code == requests.codes.ok:
+        <span class="hljs-keyword">return</span> response.content
+    <span class="hljs-keyword">else</span>:
+        print(<span class="hljs-string">'%s-%s'</span> % (url, response.status_code))
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SexyPipeline</span><span class="hljs-params">(object)</span>:</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.save_path = <span class="hljs-string">'/tmp'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">process_item</span><span class="hljs-params">(self, item, spider)</span>:</span>
+        <span class="hljs-keyword">if</span> spider.name == <span class="hljs-string">'sexy'</span>:
+            <span class="hljs-comment"># 取出item里内容</span>
+            img_url = item[<span class="hljs-string">'img_url'</span>]
+            
+            <span class="hljs-comment"># 业务处理</span>
+            file_name = img_url.split(<span class="hljs-string">'/'</span>)[<span class="hljs-number">-1</span>]
+            content = download_from_url(img_url)
+            <span class="hljs-keyword">if</span> content <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+                <span class="hljs-keyword">with</span> open(os.path.join(self.save_path, file_name), <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> fw:
+                    fw.write(content)
+        <span class="hljs-keyword">return</span> item
+</div></code></pre>
+<ul>
+<li><strong>重要的配置要开启</strong>
+在<code>settings.py</code>中开启piplines类，数值表示优先级</li>
+</ul>
+<pre class="hljs"><code><div>ITEM_PIPELINES = {
+   <span class="hljs-string">'sexy.pipelines.SexyPipeline'</span>: <span class="hljs-number">300</span>,
+}
+</div></code></pre>
+<h3 id="53-%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E9%A1%B5">5.3 自动下一页</h3>
+<p>有时候我们不仅要爬取请求页面中的内容，还要递归式的爬取里面的超链接url，特别是下一页这种，解析内容和当前页面相同的情况下。一种笨方法是手动加到<code>start_urls</code>里。大家都是聪明人来试试这个。</p>
+<ul>
+<li>先在页面解析下下一页的url</li>
+<li>scrapy.Request(next_page, callback=self.parse) 发起一个请求，并调用parse来解析，当然你可以用其他的解析</li>
+</ul>
+<p>完美了，完整例子见<code>5.1</code></p>
+<pre class="hljs"><code><div>next_page = response.xpath(<span class="hljs-string">'//div[@class="page both"]/ul/a[text()="下一页"]/@href'</span>).get()
+<span class="hljs-keyword">if</span> next_page <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+   next_page = response.urljoin(next_page)
+   <span class="hljs-keyword">yield</span> scrapy.Request(next_page, callback=self.parse)
+</div></code></pre>
+<h3 id="54-%E4%B8%AD%E9%97%B4%E4%BB%B6">5.4 中间件</h3>
+<ul>
+<li>下载中间件
+中间件的作用是提供一些常用的钩子Hook来增加额外的操作。中间件的操作是在<code>middlewares.py</code>。可以看到主要是处理请求<code>process_request</code>，响应<code>process_response</code>和异常<code>process_exception</code>三个钩子函数。</li>
+<li>处理请求<code>process_request</code>: 传给<code>DOWNLOADER</code>之前做的操作</li>
+<li>响应<code>process_response</code>：<code>DOWNLOADER</code>给<code>ENGIINE</code>响应之前的操作</li>
+</ul>
+<p>这里举一个添加模拟浏览器请求的方式，防止爬虫被封锁。重写<code>process_request</code></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> scrapy.contrib.downloadermiddleware.useragent <span class="hljs-keyword">import</span> UserAgentMiddleware
+<span class="hljs-keyword">import</span> random
+agents = [<span class="hljs-string">'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0;'</span>,
+              <span class="hljs-string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv,2.0.1) Gecko/20100101 Firefox/4.0.1'</span>,
+              <span class="hljs-string">'Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; en) Presto/2.8.131 Version/11.11'</span>,
+              <span class="hljs-string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11'</span>,
+              <span class="hljs-string">'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)'</span>]
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RandomUserAgent</span><span class="hljs-params">(UserAgentMiddleware)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">process_request</span><span class="hljs-params">(self, request, spider)</span>:</span>
+        ua = random.choice(agents)
+        request.headers.setdefault(<span class="hljs-string">'User-agent'</span>,ua,)
+</div></code></pre>
+<p>统一要在<code>settings.py</code>中开启下载中间件，数值表示优先级</p>
+<pre class="hljs"><code><div>DOWNLOADER_MIDDLEWARES = {
+    <span class="hljs-string">'sexy.middlewares.customUserAgent.RandomUserAgent'</span>: <span class="hljs-number">20</span>,
+}
+</div></code></pre>
+<h3 id="55-%E5%8F%AF%E7%94%A8%E9%85%8D%E7%BD%AEsettingspy">5.5 可用配置<code>settings.py</code></h3>
+<p>除了上面提供的pipline配置开启和中间件配置外，下面介绍几个常用的配置</p>
+<ul>
+<li>爬虫机器人规则： ROBOTSTXT_OBEY = False， 如果要爬取的网站有设置robots.txt，最好设置为False</li>
+<li>CONCURRENT_REQUESTS： 并发请求</li>
+<li>DOWNLOAD_DELAY： 下载延迟，可以适当配置，避免把网站也爬挂了。</li>
+</ul>
+<p>所有的配置详见 <code>https://doc.scrapy.org/en/latest/topics/settings.html</code></p>
+<h2 id="6-%E6%80%BB%E7%BB%93">6. 总结</h2>
+<p>相信从上面的介绍，你已经可以动手写一个你自己的爬虫了。我也完成了做笔记的任务了。scrapy还提供更加详细的细节，可参见<code>https://docs.scrapy.org/en/latest/</code>。</p>
+<p>最后总结如下：</p>
+<ul>
+<li>scrapy是基于事件驱动Twisted框架的爬虫框架。<code>ENGIINE</code>是核心，负责串起其他组件</li>
+<li>开发只要编写spider和item pipline和中间件， download和schedule交给框架</li>
+<li>scrapy crawl 你的爬虫name，name要唯一</li>
+<li>爬取的url放在start_urls， spider会自动Request的，parse来解析</li>
+<li>pipline和中间件要记得在settings中开启</li>
+<li>关注下settings的常用配置，需要时看下文档</li>
+</ul>
+
+</body>
+</html>
