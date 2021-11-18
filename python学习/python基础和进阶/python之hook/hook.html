@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>hook.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="python%E4%B8%AD%E7%9A%84hook%E5%87%BD%E6%95%B0">python中的hook函数</h1>
+<h2 id="1-%E4%BB%80%E4%B9%88%E6%98%AFhook">1. 什么是Hook</h2>
+<p>经常会听到钩子函数(hook function)这个概念，最近在看目标检测开源框架mmdetection，里面也出现大量Hook的编程方式，那到底什么是hook？hook的作用是什么？</p>
+<ul>
+<li>
+<p>what is hook
+钩子hook，顾名思义，可以理解是一个挂钩，作用是有需要的时候挂一个东西上去。具体的解释是：钩子函数是把我们自己实现的hook函数在某一时刻挂接到目标挂载点上。</p>
+</li>
+<li>
+<p>hook函数的作用
+举个例子，hook的概念在windows桌面软件开发很常见，特别是各种事件触发的机制; 比如C++的MFC程序中，要监听鼠标左键按下的时间，MFC提供了一个onLeftKeyDown的钩子函数。很显然，MFC框架并没有为我们实现onLeftKeyDown具体的操作，只是为我们提供一个钩子，当我们需要处理的时候，只要去重写这个函数，把我们需要操作挂载在这个钩子里，如果我们不挂载，MFC事件触发机制中执行的就是空的操作。</p>
+</li>
+</ul>
+<p>从上面可知</p>
+<ul>
+<li>hook函数是程序中预定义好的函数，这个函数处于原有程序流程当中（暴露一个钩子出来）</li>
+<li>我们需要再在有流程中钩子定义的函数块中实现某个具体的细节，需要把我们的实现，挂接或者注册（register）到钩子里，使得hook函数对目标可用</li>
+<li>hook 是一种编程机制，和具体的语言没有直接的关系</li>
+<li>如果从设计模式上看，hook模式是模板方法的扩展</li>
+<li>钩子只有注册的时候，才会使用，所以原有程序的流程中，没有注册或挂载时，执行的是空（即没有执行任何操作）</li>
+</ul>
+<p>本文用python来解释hook的实现方式，并展示在开源项目中hook的应用案例。hook函数和我们常听到另外一个名称：回调函数（callback function）功能是类似的，可以按照同种模式来理解。</p>
+<h2 id="2-hook%E5%AE%9E%E7%8E%B0%E4%BE%8B%E5%AD%90">2. hook实现例子</h2>
+<p>据我所知，hook函数最常使用在某种流程处理当中。 这个流程往往有很多步骤。hook函数常常挂载在这些步骤中，为增加额外的一些操作，提供灵活性。</p>
+<p>下面举一个简单的例子，这个例子的目的是实现一个通用往队列中插入内容的功能。流程步骤有2个</p>
+<ul>
+<li>需要再插入队列前，对数据进行筛选 <code>input_filter_fn</code></li>
+<li>插入队列 <code>insert_queue</code></li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ContentStash</span><span class="hljs-params">(object)</span>:</span>
+    <span class="hljs-string">"""
+    content stash for online operation
+    pipeline is
+    1. input_filter: filter some contents, no use to user
+    2. insert_queue(redis or other broker): insert useful content to queue
+    """</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.input_filter_fn = <span class="hljs-literal">None</span>
+        self.broker = []
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">register_input_filter_hook</span><span class="hljs-params">(self, input_filter_fn)</span>:</span>
+        <span class="hljs-string">"""
+        register input filter function, parameter is content dict
+        Args:
+            input_filter_fn: input filter function
+
+        Returns:
+
+        """</span>
+        self.input_filter_fn = input_filter_fn
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">insert_queue</span><span class="hljs-params">(self, content)</span>:</span>
+        <span class="hljs-string">"""
+        insert content to queue
+        Args:
+            content: dict
+
+        Returns:
+
+        """</span>
+        self.broker.append(content)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">input_pipeline</span><span class="hljs-params">(self, content, use=False)</span>:</span>
+        <span class="hljs-string">"""
+        pipeline of input for content stash
+        Args:
+            use: is use, defaul False
+            content: dict
+
+        Returns:
+
+        """</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> use:
+            <span class="hljs-keyword">return</span>
+
+        <span class="hljs-comment"># input filter</span>
+        <span class="hljs-keyword">if</span> self.input_filter_fn:
+            _filter = self.input_filter_fn(content)
+            
+        <span class="hljs-comment"># insert to queue</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> _filter:
+            self.insert_queue(content)
+
+
+
+<span class="hljs-comment"># test</span>
+<span class="hljs-comment">## 实现一个你所需要的钩子实现：比如如果content 包含time就过滤掉，否则插入队列</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">input_filter_hook</span><span class="hljs-params">(content)</span>:</span>
+    <span class="hljs-string">"""
+    test input filter hook
+    Args:
+        content: dict
+
+    Returns: None or content
+
+    """</span>
+    <span class="hljs-keyword">if</span> content.get(<span class="hljs-string">'time'</span>) <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:
+        <span class="hljs-keyword">return</span>
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> content
+
+
+<span class="hljs-comment"># 原有程序</span>
+content = {<span class="hljs-string">'filename'</span>: <span class="hljs-string">'test.jpg'</span>, <span class="hljs-string">'b64_file'</span>: <span class="hljs-string">"#test"</span>, <span class="hljs-string">'data'</span>: {<span class="hljs-string">"result"</span>: <span class="hljs-string">"cat"</span>, <span class="hljs-string">"probility"</span>: <span class="hljs-number">0.9</span>}}
+content_stash = ContentStash(<span class="hljs-string">'audit'</span>, work_dir=<span class="hljs-string">''</span>)
+
+<span class="hljs-comment"># 挂上钩子函数， 可以有各种不同钩子函数的实现，但是要主要函数输入输出必须保持原有程序中一致，比如这里是content</span>
+content_stash.register_input_filter_hook(input_filter_hook)
+
+<span class="hljs-comment"># 执行流程</span>
+content_stash.input_pipeline(content)
+
+</div></code></pre>
+<h2 id="3-hook%E5%9C%A8%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8">3. hook在开源框架中的应用</h2>
+<h3 id="31-keras">3.1 keras</h3>
+<p>在深度学习训练流程中，hook函数体现的淋漓尽致。</p>
+<p>一个训练过程（不包括数据准备），会轮询多次训练集，每次称为一个epoch，每个epoch又分为多个batch来训练。 流程先后拆解成：</p>
+<ul>
+<li>开始训练</li>
+<li>训练一个epoch前</li>
+<li>训练一个batch前</li>
+<li>训练一个batch后</li>
+<li>训练一个epoch后</li>
+<li>评估验证集</li>
+<li>结束训练</li>
+</ul>
+<p>这些步骤是穿插在训练一个batch数据的过程中，这些可以理解成是钩子函数，我们可能需要在这些钩子函数中实现一些定制化的东西，比如在<code>训练一个epoch后</code>我们要保存下训练的模型，在<code>结束训练</code>时用最好的模型执行下测试集的效果等等。</p>
+<p>keras中是通过各种回调函数来实现钩子hook功能的。这里放一个callback的父类，定制时只要继承这个父类，实现你过关注的钩子就可以了。</p>
+<pre class="hljs"><code><div><span class="hljs-meta">@keras_export('keras.callbacks.Callback')</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Callback</span><span class="hljs-params">(object)</span>:</span>
+  <span class="hljs-string">"""Abstract base class used to build new callbacks.
+
+  Attributes:
+      params: Dict. Training parameters
+          (eg. verbosity, batch size, number of epochs...).
+      model: Instance of `keras.models.Model`.
+          Reference of the model being trained.
+
+  The `logs` dictionary that callback methods
+  take as argument will contain keys for quantities relevant to
+  the current batch or epoch (see method-specific docstrings).
+  """</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+    self.validation_data = <span class="hljs-literal">None</span>  <span class="hljs-comment"># pylint: disable=g-missing-from-attributes</span>
+    self.model = <span class="hljs-literal">None</span>
+    <span class="hljs-comment"># Whether this Callback should only run on the chief worker in a</span>
+    <span class="hljs-comment"># Multi-Worker setting.</span>
+    <span class="hljs-comment"># TODO(omalleyt): Make this attr public once solution is stable.</span>
+    self._chief_worker_only = <span class="hljs-literal">None</span>
+    self._supports_tf_logs = <span class="hljs-literal">False</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">set_params</span><span class="hljs-params">(self, params)</span>:</span>
+    self.params = params
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">set_model</span><span class="hljs-params">(self, model)</span>:</span>
+    self.model = model
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_batch_begin</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""A backwards compatibility alias for `on_train_batch_begin`."""</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_batch_end</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""A backwards compatibility alias for `on_train_batch_end`."""</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_epoch_begin</span><span class="hljs-params">(self, epoch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the start of an epoch.
+
+    Subclasses should override for any actions to run. This function should only
+    be called during TRAIN mode.
+
+    Arguments:
+        epoch: Integer, index of epoch.
+        logs: Dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_epoch_end</span><span class="hljs-params">(self, epoch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the end of an epoch.
+
+    Subclasses should override for any actions to run. This function should only
+    be called during TRAIN mode.
+
+    Arguments:
+        epoch: Integer, index of epoch.
+        logs: Dict, metric results for this training epoch, and for the
+          validation epoch if validation is performed. Validation result keys
+          are prefixed with `val_`.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_train_batch_begin</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the beginning of a training batch in `fit` methods.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: Integer, index of batch within the current epoch.
+        logs: Dict, contains the return value of `model.train_step`. Typically,
+          the values of the `Model`'s metrics are returned.  Example:
+          `{'loss': 0.2, 'accuracy': 0.7}`.
+    """</span>
+    <span class="hljs-comment"># For backwards compatibility.</span>
+    self.on_batch_begin(batch, logs=logs)
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_train_batch_end</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the end of a training batch in `fit` methods.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: Integer, index of batch within the current epoch.
+        logs: Dict. Aggregated metric results up until this batch.
+    """</span>
+    <span class="hljs-comment"># For backwards compatibility.</span>
+    self.on_batch_end(batch, logs=logs)
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_test_batch_begin</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the beginning of a batch in `evaluate` methods.
+
+    Also called at the beginning of a validation batch in the `fit`
+    methods, if validation data is provided.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: Integer, index of batch within the current epoch.
+        logs: Dict, contains the return value of `model.test_step`. Typically,
+          the values of the `Model`'s metrics are returned.  Example:
+          `{'loss': 0.2, 'accuracy': 0.7}`.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_test_batch_end</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the end of a batch in `evaluate` methods.
+
+    Also called at the end of a validation batch in the `fit`
+    methods, if validation data is provided.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: Integer, index of batch within the current epoch.
+        logs: Dict. Aggregated metric results up until this batch.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_predict_batch_begin</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the beginning of a batch in `predict` methods.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: Integer, index of batch within the current epoch.
+        logs: Dict, contains the return value of `model.predict_step`,
+          it typically returns a dict with a key 'outputs' containing
+          the model's outputs.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+<span class="hljs-meta">  @generic_utils.default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_predict_batch_end</span><span class="hljs-params">(self, batch, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the end of a batch in `predict` methods.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: Integer, index of batch within the current epoch.
+        logs: Dict. Aggregated metric results up until this batch.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_train_begin</span><span class="hljs-params">(self, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the beginning of training.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: Dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_train_end</span><span class="hljs-params">(self, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the end of training.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: Dict. Currently the output of the last call to `on_epoch_end()`
+          is passed to this argument for this method but that may change in
+          the future.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_test_begin</span><span class="hljs-params">(self, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the beginning of evaluation or validation.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: Dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_test_end</span><span class="hljs-params">(self, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the end of evaluation or validation.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: Dict. Currently the output of the last call to
+          `on_test_batch_end()` is passed to this argument for this method
+          but that may change in the future.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_predict_begin</span><span class="hljs-params">(self, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the beginning of prediction.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: Dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    """</span>
+
+<span class="hljs-meta">  @doc_controls.for_subclass_implementers</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_predict_end</span><span class="hljs-params">(self, logs=None)</span>:</span>
+    <span class="hljs-string">"""Called at the end of prediction.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: Dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    """</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_implements_train_batch_hooks</span><span class="hljs-params">(self)</span>:</span>
+    <span class="hljs-string">"""Determines if this Callback should be called for each train batch."""</span>
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">not</span> generic_utils.is_default(self.on_batch_begin) <span class="hljs-keyword">or</span>
+            <span class="hljs-keyword">not</span> generic_utils.is_default(self.on_batch_end) <span class="hljs-keyword">or</span>
+            <span class="hljs-keyword">not</span> generic_utils.is_default(self.on_train_batch_begin) <span class="hljs-keyword">or</span>
+            <span class="hljs-keyword">not</span> generic_utils.is_default(self.on_train_batch_end))
+</div></code></pre>
+<p>这些钩子的原始程序是在模型训练流程中的</p>
+<blockquote>
+<p>keras源码位置： tensorflow\python\keras\engine\training.py</p>
+</blockquote>
+<p>部分摘录如下(## I am hook)：</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Container that configures and calls `tf.keras.Callback`s.</span>
+      <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> isinstance(callbacks, callbacks_module.CallbackList):
+        callbacks = callbacks_module.CallbackList(
+            callbacks,
+            add_history=<span class="hljs-literal">True</span>,
+            add_progbar=verbose != <span class="hljs-number">0</span>,
+            model=self,
+            verbose=verbose,
+            epochs=epochs,
+            steps=data_handler.inferred_steps)
+
+      <span class="hljs-comment">## I am hook</span>
+      callbacks.on_train_begin()
+      training_logs = <span class="hljs-literal">None</span>
+      <span class="hljs-comment"># Handle fault-tolerance for multi-worker.</span>
+      <span class="hljs-comment"># TODO(omalleyt): Fix the ordering issues that mean this has to</span>
+      <span class="hljs-comment"># happen after `callbacks.on_train_begin`.</span>
+      data_handler._initial_epoch = (  <span class="hljs-comment"># pylint: disable=protected-access</span>
+          self._maybe_load_initial_epoch_from_ckpt(initial_epoch))
+      <span class="hljs-keyword">for</span> epoch, iterator <span class="hljs-keyword">in</span> data_handler.enumerate_epochs():
+        self.reset_metrics()
+        callbacks.on_epoch_begin(epoch)
+        <span class="hljs-keyword">with</span> data_handler.catch_stop_iteration():
+          <span class="hljs-keyword">for</span> step <span class="hljs-keyword">in</span> data_handler.steps():
+            <span class="hljs-keyword">with</span> trace.Trace(
+                <span class="hljs-string">'TraceContext'</span>,
+                graph_type=<span class="hljs-string">'train'</span>,
+                epoch_num=epoch,
+                step_num=step,
+                batch_size=batch_size):
+              <span class="hljs-comment">## I am hook</span>
+              callbacks.on_train_batch_begin(step)
+              tmp_logs = train_function(iterator)
+              <span class="hljs-keyword">if</span> data_handler.should_sync:
+                context.async_wait()
+              logs = tmp_logs  <span class="hljs-comment"># No error, now safe to assign to logs.</span>
+              end_step = step + data_handler.step_increment
+              callbacks.on_train_batch_end(end_step, logs)
+        epoch_logs = copy.copy(logs)
+
+        <span class="hljs-comment"># Run validation.</span>
+
+        <span class="hljs-comment">## I am hook</span>
+        callbacks.on_epoch_end(epoch, epoch_logs)
+</div></code></pre>
+<h3 id="32-mmdetection">3.2 mmdetection</h3>
+<p>mmdetection是一个目标检测的开源框架，集成了许多不同的目标检测深度学习算法（pytorch版），如faster-rcnn, fpn, retianet等。里面也大量使用了hook，暴露给应用实现流程中具体部分。</p>
+<p>详见<code>https://github.com/open-mmlab/mmdetection</code></p>
+<p>这里看一个训练的调用例子(摘录)（<code>https://github.com/open-mmlab/mmdetection/blob/5d592154cca589c5113e8aadc8798bbc73630d98/mmdet/apis/train.py</code>）</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">train_detector</span><span class="hljs-params">(model,
+                   dataset,
+                   cfg,
+                   distributed=False,
+                   validate=False,
+                   timestamp=None,
+                   meta=None)</span>:</span>
+    logger = get_root_logger(cfg.log_level)
+
+    <span class="hljs-comment"># prepare data loaders</span>
+
+    <span class="hljs-comment"># put model on gpus</span>
+
+    <span class="hljs-comment"># build runner</span>
+    optimizer = build_optimizer(model, cfg.optimizer)
+    runner = EpochBasedRunner(
+        model,
+        optimizer=optimizer,
+        work_dir=cfg.work_dir,
+        logger=logger,
+        meta=meta)
+    <span class="hljs-comment"># an ugly workaround to make .log and .log.json filenames the same</span>
+    runner.timestamp = timestamp
+
+    <span class="hljs-comment"># fp16 setting</span>
+    <span class="hljs-comment"># register hooks</span>
+    runner.register_training_hooks(cfg.lr_config, optimizer_config,
+                                   cfg.checkpoint_config, cfg.log_config,
+                                   cfg.get(<span class="hljs-string">'momentum_config'</span>, <span class="hljs-literal">None</span>))
+    <span class="hljs-keyword">if</span> distributed:
+        runner.register_hook(DistSamplerSeedHook())
+
+    <span class="hljs-comment"># register eval hooks</span>
+    <span class="hljs-keyword">if</span> validate:
+        <span class="hljs-comment"># Support batch_size &gt; 1 in validation</span>
+        eval_cfg = cfg.get(<span class="hljs-string">'evaluation'</span>, {})
+        eval_hook = DistEvalHook <span class="hljs-keyword">if</span> distributed <span class="hljs-keyword">else</span> EvalHook
+        runner.register_hook(eval_hook(val_dataloader, **eval_cfg))
+
+    <span class="hljs-comment"># user-defined hooks</span>
+    <span class="hljs-keyword">if</span> cfg.get(<span class="hljs-string">'custom_hooks'</span>, <span class="hljs-literal">None</span>):
+        custom_hooks = cfg.custom_hooks
+        <span class="hljs-keyword">assert</span> isinstance(custom_hooks, list), \
+            <span class="hljs-string">f'custom_hooks expect list type, but got <span class="hljs-subst">{type(custom_hooks)}</span>'</span>
+        <span class="hljs-keyword">for</span> hook_cfg <span class="hljs-keyword">in</span> cfg.custom_hooks:
+            <span class="hljs-keyword">assert</span> isinstance(hook_cfg, dict), \
+                <span class="hljs-string">'Each item in custom_hooks expects dict type, but got '</span> \
+                <span class="hljs-string">f'<span class="hljs-subst">{type(hook_cfg)}</span>'</span>
+            hook_cfg = hook_cfg.copy()
+            priority = hook_cfg.pop(<span class="hljs-string">'priority'</span>, <span class="hljs-string">'NORMAL'</span>)
+            hook = build_from_cfg(hook_cfg, HOOKS)
+            runner.register_hook(hook, priority=priority)
+</div></code></pre>
+<h2 id="4-%E6%80%BB%E7%BB%93">4. 总结</h2>
+<p>本文介绍了hook的概念和应用，并给出了python的实现细则。希望对比有帮助。总结如下：</p>
+<ul>
+<li>hook函数是流程中预定义好的一个步骤，没有实现</li>
+<li>挂载或者注册时， 流程执行就会执行这个钩子函数</li>
+<li>回调函数和hook函数功能上是一致的</li>
+<li>hook设计方式带来灵活性，如果流程中有一个步骤，你想让调用方来实现，你可以用hook函数</li>
+</ul>
+
+</body>
+</html>
