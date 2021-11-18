@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>自定义keras.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E6%B5%85%E8%B0%88keras%E7%9A%84%E6%89%A9%E5%B1%95%E6%80%A7%E8%87%AA%E5%AE%9A%E4%B9%89keras">浅谈keras的扩展性：自定义keras</h1>
+<p>个人简介：
+wedo实验君, 数据分析师；热爱生活，热爱写作</p>
+<p><img src="img/md-2020-10-03-16-38-31.png" alt=""></p>
+<h2 id="1-%E8%87%AA%E5%AE%9A%E4%B9%89keras">1. 自定义keras</h2>
+<p>keras是一种深度学习的API，能够快速实现你的实验。keras也集成了很多预训练的模型，可以实现很多常规的任务，如图像分类。TensorFlow 2.0之后tensorflow本身也变的很keras化。</p>
+<p>另一方面，keras表现出高度的模块化和封装性，所以有的人会觉得keras不易于扩展， 比如实现一种新的Loss，新的网络层结构； 其实可以通过keras的基础模块进行快速的扩展，实现更新的算法。</p>
+<p>本文就keras的扩展性，总结了对layer，model和loss的自定义。</p>
+<h2 id="2-%E8%87%AA%E5%AE%9A%E4%B9%89keras-layers">2. 自定义keras layers</h2>
+<p>layers是keras中重要的组成部分，网络结构中每一个组成都要以layers来表现。keras提供了很多常规的layer，如Convolution layers，pooling layers， activation layers， dense layers等， 我们可以通过继承基础layers来扩展自定义的layers。</p>
+<h3 id="21-base-layer">2.1 base layer</h3>
+<p>layer实了输入tensor和输出tensor的操作类，以下为base layer的5个方法，自定义layer只要重写这些方法就可以了。</p>
+<ul>
+<li><strong>init</strong>(): 定义自定义layer的一些属性</li>
+<li>build(self, input_shape)： 定义layer需要的权重weights</li>
+<li>call(self, *args, **kwargs)：layer具体的操作，会在调用自定义layer自动执行</li>
+<li>get_config(self)：layer初始化的配置，是一个字典dictionary。</li>
+<li>compute_output_shape(self,input_shape)：计算输出tensor的shape</li>
+</ul>
+<h3 id="22-%E4%BE%8B%E5%AD%90">2.2 例子</h3>
+<pre class="hljs"><code><div><span class="hljs-comment"># 标准化层</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InstanceNormalize</span><span class="hljs-params">(Layer)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, **kwargs)</span>:</span>
+        super(InstanceNormalize, self).__init__(**kwargs)
+        self.epsilon = <span class="hljs-number">1e-3</span>
+            
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">call</span><span class="hljs-params">(self, x, mask=None)</span>:</span>
+        mean, var = tf.nn.moments(x, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], keep_dims=<span class="hljs-literal">True</span>)
+        <span class="hljs-keyword">return</span> tf.div(tf.subtract(x, mean), tf.sqrt(tf.add(var, self.epsilon)))
+
+                                                 
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">compute_output_shape</span><span class="hljs-params">(self,input_shape)</span>:</span>
+        <span class="hljs-keyword">return</span> input_shape
+
+<span class="hljs-comment"># 调用</span>
+inputs = keras.Input(shape=(<span class="hljs-literal">None</span>, <span class="hljs-literal">None</span>, <span class="hljs-number">3</span>))
+x = InstanceNormalize()(inputs)
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment"># 可以通过add_weight() 创建权重</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleDense</span><span class="hljs-params">(Layer)</span>:</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, units=<span class="hljs-number">32</span>)</span>:</span>
+      super(SimpleDense, self).__init__()
+      self.units = units
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">build</span><span class="hljs-params">(self, input_shape)</span>:</span>
+      self.w = self.add_weight(shape=(input_shape[<span class="hljs-number">-1</span>], self.units),
+                               initializer=<span class="hljs-string">'random_normal'</span>,
+                               trainable=<span class="hljs-literal">True</span>)
+      self.b = self.add_weight(shape=(self.units,),
+                               initializer=<span class="hljs-string">'random_normal'</span>,
+                               trainable=<span class="hljs-literal">True</span>)
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">call</span><span class="hljs-params">(self, inputs)</span>:</span>
+      <span class="hljs-keyword">return</span> tf.matmul(inputs, self.w) + self.b
+
+<span class="hljs-comment"># 调用</span>
+inputs = keras.Input(shape=(<span class="hljs-literal">None</span>, <span class="hljs-literal">None</span>, <span class="hljs-number">3</span>))
+x = SimpleDense(units=<span class="hljs-number">64</span>)(inputs)
+</div></code></pre>
+<h2 id="3-%E8%87%AA%E5%AE%9A%E4%B9%89keras-model">3. 自定义keras model</h2>
+<p>我们在定义完网络结构时，会把整个工作流放在<code>keras.Model</code>， 进行<code>compile()</code>, 然后通过<code>fit()</code>进行训练过程。执行<code>fit()</code>的时候，执行每个batch size data的时候，都会调用<code>Model</code>中<code>train_step(self, data)</code></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> keras.models <span class="hljs-keyword">import</span> Sequential
+<span class="hljs-keyword">from</span> keras.layers <span class="hljs-keyword">import</span> Dense, Activation
+model = Sequential()
+
+model.add(Dense(units=<span class="hljs-number">64</span>, input_dim=<span class="hljs-number">100</span>))
+model.add(Activation(<span class="hljs-string">"relu"</span>))
+model.add(Dense(units=<span class="hljs-number">10</span>))
+model.add(Activation(<span class="hljs-string">"softmax"</span>))
+
+model.compile(loss=<span class="hljs-string">'categorical_crossentropy'</span>, optimizer=<span class="hljs-string">'sgd'</span>, metrics=[<span class="hljs-string">'accuracy'</span>])
+
+model.fit(x_train, y_train, epochs=<span class="hljs-number">5</span>, batch_size=<span class="hljs-number">32</span>)
+</div></code></pre>
+<p>当你需要自己控制训练过程的时候，可以重写<code>Model</code>的<code>train_step(self, data)</code>方法</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomModel</span><span class="hljs-params">(keras.Model)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">train_step</span><span class="hljs-params">(self, data)</span>:</span>
+        <span class="hljs-comment"># Unpack the data. Its structure depends on your model and</span>
+        <span class="hljs-comment"># on what you pass to `fit()`.</span>
+        x, y = data
+
+        <span class="hljs-keyword">with</span> tf.GradientTape() <span class="hljs-keyword">as</span> tape:
+            y_pred = self(x, training=<span class="hljs-literal">True</span>)  <span class="hljs-comment"># Forward pass</span>
+            <span class="hljs-comment"># Compute the loss value</span>
+            <span class="hljs-comment"># (the loss function is configured in `compile()`)</span>
+            loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
+
+        <span class="hljs-comment"># Compute gradients</span>
+        trainable_vars = self.trainable_variables
+        gradients = tape.gradient(loss, trainable_vars)
+        <span class="hljs-comment"># Update weights</span>
+        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        <span class="hljs-comment"># Update metrics (includes the metric that tracks the loss)</span>
+        self.compiled_metrics.update_state(y, y_pred)
+        <span class="hljs-comment"># Return a dict mapping metric names to current value</span>
+        <span class="hljs-keyword">return</span> {m.name: m.result() <span class="hljs-keyword">for</span> m <span class="hljs-keyword">in</span> self.metrics}
+
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+<span class="hljs-comment"># Construct and compile an instance of CustomModel</span>
+inputs = keras.Input(shape=(<span class="hljs-number">32</span>,))
+outputs = keras.layers.Dense(<span class="hljs-number">1</span>)(inputs)
+model = CustomModel(inputs, outputs)
+model.compile(optimizer=<span class="hljs-string">"adam"</span>, loss=<span class="hljs-string">"mse"</span>, metrics=[<span class="hljs-string">"mae"</span>])
+
+<span class="hljs-comment"># Just use `fit` as usual</span>
+x = np.random.random((<span class="hljs-number">1000</span>, <span class="hljs-number">32</span>))
+y = np.random.random((<span class="hljs-number">1000</span>, <span class="hljs-number">1</span>))
+model.fit(x, y, epochs=<span class="hljs-number">3</span>)
+</div></code></pre>
+<h2 id="4-%E8%87%AA%E5%AE%9A%E4%B9%89keras-loss">4. 自定义keras loss</h2>
+<p>keras实现了交叉熵等常见的loss，自定义loss对于使用keras来说是比较常见，实现各种魔改loss，如focal loss。</p>
+<p>我们来看看keras源码中对loss实现</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">categorical_crossentropy</span><span class="hljs-params">(y_true, y_pred)</span>:</span>
+    <span class="hljs-keyword">return</span> K.categorical_crossentropy(y_true, y_pred)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">mean_squared_error</span><span class="hljs-params">(y_true, y_pred)</span>:</span>
+    <span class="hljs-keyword">return</span> K.mean(K.square(y_pred - y_true), axis=<span class="hljs-number">-1</span>)
+
+</div></code></pre>
+<p>可以看出输入是groud true <code>y_true</code>和预测值<code>y_pred</code>， 返回为计算loss的函数。自定义loss可以参照如此模式即可。</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">focal_loss</span><span class="hljs-params">(weights=None, alpha=<span class="hljs-number">0.25</span>, gamma=<span class="hljs-number">2</span>)</span>:</span>
+    <span class="hljs-string">r"""Compute focal loss for predictions.
+        Multi-labels Focal loss formula:
+            FL = -alpha * (z-p)^gamma * log(p) -(1-alpha) * p^gamma * log(1-p)
+                 ,which alpha = 0.25, gamma = 2, p = sigmoid(x), z = target_tensor.
+    # https://github.com/ailias/Focal-Loss-implement-on-Tensorflow/blob/master/focal_loss.py
+    Args:
+     prediction_tensor: A float tensor of shape [batch_size, num_anchors,
+        num_classes] representing the predicted logits for each class
+     target_tensor: A float tensor of shape [batch_size, num_anchors,
+        num_classes] representing one-hot encoded classification targets
+     weights: A float tensor of shape [batch_size, num_anchors]
+     alpha: A scalar tensor for focal loss alpha hyper-parameter
+     gamma: A scalar tensor for focal loss gamma hyper-parameter
+    Returns:
+        loss: A (scalar) tensor representing the value of the loss function
+    """</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_custom_loss</span><span class="hljs-params">(y_true, y_pred)</span>:</span>
+        sigmoid_p = tf.nn.sigmoid(y_pred)
+        zeros = array_ops.zeros_like(sigmoid_p, dtype=sigmoid_p.dtype)
+
+        <span class="hljs-comment"># For poitive prediction, only need consider front part loss, back part is 0;</span>
+        <span class="hljs-comment"># target_tensor &gt; zeros &lt;=&gt; z=1, so poitive coefficient = z - p.</span>
+        pos_p_sub = array_ops.where(y_true &gt; zeros, y_true - sigmoid_p, zeros)
+
+        <span class="hljs-comment"># For negative prediction, only need consider back part loss, front part is 0;</span>
+        <span class="hljs-comment"># target_tensor &gt; zeros &lt;=&gt; z=1, so negative coefficient = 0.</span>
+        neg_p_sub = array_ops.where(y_true &gt; zeros, zeros, sigmoid_p)
+        per_entry_cross_ent = - alpha * (pos_p_sub ** gamma) * tf.log(tf.clip_by_value(sigmoid_p, <span class="hljs-number">1e-8</span>, <span class="hljs-number">1.0</span>)) \
+                              - (<span class="hljs-number">1</span> - alpha) * (neg_p_sub ** gamma) * tf.log(
+            tf.clip_by_value(<span class="hljs-number">1.0</span> - sigmoid_p, <span class="hljs-number">1e-8</span>, <span class="hljs-number">1.0</span>))
+        <span class="hljs-keyword">return</span> tf.reduce_sum(per_entry_cross_ent)
+
+    <span class="hljs-keyword">return</span> _custom_loss
+</div></code></pre>
+<h2 id="5-%E6%80%BB%E7%BB%93">5. 总结</h2>
+<p>本文分享了keras的扩展功能，扩展功能其实也是实现Keras模块化的一种继承实现。</p>
+<p>总结如下：</p>
+<ul>
+<li>继承Layer实现自定义layer， 记住<code>bulid()</code> <code>call()</code></li>
+<li>继续Model实现<code>train_step</code>定义训练过程，记住梯度计算<code>tape.gradient(loss, trainable_vars)</code> ，权重更新<code>optimizer.apply_gradients</code>, 计算evaluate <code>compiled_metrics.update_state(y, y_pred)</code></li>
+<li>魔改loss，记住groud true <code>y_true</code>和预测值<code>y_pred</code>输入，返回loss function</li>
+</ul>
+
+</body>
+</html>
