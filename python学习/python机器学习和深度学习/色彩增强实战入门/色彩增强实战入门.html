@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>色彩增强实战入门.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E8%89%B2%E5%BD%A9%E5%A2%9E%E5%BC%BAcolor-enhancement%E5%AE%9E%E6%88%98%E5%85%A5%E9%97%A8">色彩增强（Color Enhancement）实战入门</h1>
+<p>个人简介：
+wedo实验君-余养强, 数据分析师；热爱生活，热爱写作。微信号：mintel （米口）</p>
+<h2 id="1-%E4%BB%80%E4%B9%88%E6%98%AF%E8%89%B2%E5%BD%A9%E5%A2%9E%E5%BC%BA">1. 什么是色彩增强</h2>
+<p>现实中由于设备、拍摄技术和拍摄环境等不同的原因，所生成的图像存在色彩偏差，亮度异常（过暗或者过亮）以及颜色暗淡等问题。</p>
+<p>色彩增强（Color Enhancement）是通过调节图片的色彩饱和度、亮度、对比度，使得图片色彩更加逼真的技术。根据应用的场景，色彩增强技术可以分为：</p>
+<ul>
+<li>
+<p>低光照图像增强：恢复图像的亮度和色彩度 （Low-Light Image Enhancement）</p>
+</li>
+<li>
+<p>白平衡调整：在不同光线条件下，恢复图像中原有物体的固有色（White-Balanced Images）</p>
+<p><img src="img/md-2021-06-14-16-51-49.png" alt=""></p>
+</li>
+<li>
+<p>颜色暗淡调整（如老照片，年度久远的动画片）：恢复图像的饱和度，对比度（Image Enhancement）</p>
+</li>
+</ul>
+<p>本文通过介绍色彩增强中的一些基本概念以及传统方法和深度学习算法实践，抛砖引玉。</p>
+<h2 id="2-%E8%89%B2%E5%BD%A9%E5%A2%9E%E5%BC%BA%E6%A6%82%E5%BF%B5%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A">2. 色彩增强概念必知必会</h2>
+<h3 id="21-%E7%99%BD%E5%B9%B3%E8%A1%A1">2.1 白平衡</h3>
+<p>白平衡和色温有直接的关系。我们用照相机在不同时候拍摄同一个物体时成像的物体颜色是不一样。这就是色温的影响，色温是用定量值（单位是开尔文K）来定义色彩。色温越低颜色越红，色温越高，颜色越蓝。一般情况下，中午的阳光色温为5600K色彩偏白， 烛光色温为1850K，色彩偏红， 日出日落色温3000k色彩偏黄。不同色温下的色彩如下图：</p>
+<p><img src="img/md-2021-06-14-22-57-14.png" alt=""></p>
+<p>照相机是通过设置与当前光线合适的色温来真实还原物体的色彩。当给出具体的色温值，相机就会认为光源的颜色和色温一致，进而根据这个色温为基准，计算出照片的色彩。因为相机中色彩的还原是以白色为基色，将这个过程称之为白平衡。常见白平衡模式为：自动、日光、多云、阴天、钨丝灯(白炽灯)、闪光灯、荧光灯、色温值等。</p>
+<p>不同色温下拍摄的图像差异</p>
+<p><img src="img/md-2021-06-14-22-52-11.png" alt=""></p>
+<h3 id="22-ps%E6%9B%B2%E7%BA%BF%E5%B7%A5%E5%85%B7">2.2 PS曲线工具</h3>
+<p>PS中曲线工具是调色的中常用的工具，通过在曲线上锚定不同的点，在改变图像像素值的分布。这里的曲线是SPLine样条曲线。</p>
+<p><img src="img/md-2021-06-14-23-19-31.png" alt=""></p>
+<h3 id="22-%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4">2.2 颜色空间</h3>
+<p>颜色空间又称为彩色空间，是在一个坐标空间对颜色的说明。</p>
+<ul>
+<li>RGB： 用RGB三原色表示颜色，是人眼识别颜色而定义出的空间。用于用于屏幕显示和视频输出</li>
+</ul>
+<p><img src="img/md-2021-06-15-22-26-38.png" alt=""></p>
+<ul>
+<li>HSV：H代表Hue（色彩），S代表Saturation（饱和度），V代表Value，也可用B表示（Brightness，明度）。HSV是为了更好的数字化颜色提出的空间</li>
+</ul>
+<p><img src="img/md-2021-06-15-23-06-48.png" alt=""></p>
+<ul>
+<li>LAB：由一个亮度通道（channel）和两个颜色通道组成的。在Lab颜色空间中，每个颜色用L、a、b三个数字表示。其中L代表亮度，a代表从绿色到红色的分量 ， b代表从蓝色到黄色的分量。LAB是CIE（国际照明委员会）根据人对颜色的感觉提出的色彩模型。</li>
+</ul>
+<p><img src="img/md-2021-06-15-23-53-54.png" alt=""></p>
+<p>可以看出可以在各个颜色空间的不同维度上分量调整来进行色彩和亮度的调整，达到色彩增强的目的。</p>
+<h2 id="3-%E4%BC%A0%E7%BB%9F%E7%AE%97%E6%B3%95">3. 传统算法</h2>
+<h3 id="31-retinex%E6%96%B9%E6%B3%95">3.1 retinex方法</h3>
+<p>retinex理论将物体在我们眼中成像理解成光照在物体的反射结果。从下图可知要想恢复物体本身的颜色R，需要尽可能的减少光照L的影响。</p>
+<p><img src="img/md-2021-06-16-22-43-09.png" alt=""></p>
+<p>我们做一个简单的数学变换，取log， 光照图像L一般可以估计为平滑的图像空间，可采用不同核函数的高斯模糊来实现。这就是单尺度的retinex算法</p>
+<p><img src="img/md-2021-06-16-22-47-11.png" alt=""></p>
+<p><img src="img/md-2021-06-16-22-48-20.png" alt=""></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">singleScaleRetinex</span><span class="hljs-params">(img, sigma)</span>:</span>
+    retinex = np.log10(img) - np.log10(cv2.GaussianBlur(img, (<span class="hljs-number">0</span>, <span class="hljs-number">0</span>), sigma))
+    <span class="hljs-keyword">return</span> retinex
+</div></code></pre>
+<p>在单尺度retinex基础上，针对如何更灵活的估计光照L和保留色彩度，有提出了不同的改进思路：</p>
+<ul>
+<li>
+<p>多尺度的retinex [MSR]： 简单的说每个通道用多个不同尺度的高斯核模糊来求平均</p>
+</li>
+<li>
+<p>色彩恢复的MSR [MSRCR和MSRCP]</p>
+<p><img src="img/md-2021-06-16-23-20-49.png" alt=""></p>
+<p><img src="img/md-2021-06-16-23-22-34.png" alt=""></p>
+</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">singleScaleRetinex</span><span class="hljs-params">(img, sigma)</span>:</span>
+
+    retinex = np.log10(img) - np.log10(cv2.GaussianBlur(img, (<span class="hljs-number">0</span>, <span class="hljs-number">0</span>), sigma))
+
+    <span class="hljs-keyword">return</span> retinex
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">MSR</span><span class="hljs-params">(img, sigma_list)</span>:</span>
+
+    retinex = np.zeros_like(img)
+    <span class="hljs-keyword">for</span> sigma <span class="hljs-keyword">in</span> sigma_list:
+        retinex += singleScaleRetinex(img, sigma)
+
+    retinex = retinex / len(sigma_list)
+
+    <span class="hljs-keyword">return</span> retinex
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">colorRestoration</span><span class="hljs-params">(img, alpha, beta)</span>:</span>
+
+    img_sum = np.sum(img, axis=<span class="hljs-number">2</span>, keepdims=<span class="hljs-literal">True</span>)
+
+    color_restoration = beta * (np.log10(alpha * img) - np.log10(img_sum))
+
+    <span class="hljs-keyword">return</span> color_restoration
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">simplestColorBalance</span><span class="hljs-params">(img, low_clip, high_clip)</span>:</span>    
+
+    total = img.shape[<span class="hljs-number">0</span>] * img.shape[<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(img.shape[<span class="hljs-number">2</span>]):
+        unique, counts = np.unique(img[:, :, i], return_counts=<span class="hljs-literal">True</span>)
+        current = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">for</span> u, c <span class="hljs-keyword">in</span> zip(unique, counts):            
+            <span class="hljs-keyword">if</span> float(current) / total &lt; low_clip:
+                low_val = u
+            <span class="hljs-keyword">if</span> float(current) / total &lt; high_clip:
+                high_val = u
+            current += c
+                
+        img[:, :, i] = np.maximum(np.minimum(img[:, :, i], high_val), low_val)
+
+    <span class="hljs-keyword">return</span> img    
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">MSRCR</span><span class="hljs-params">(img, sigma_list, G, b, alpha, beta, low_clip, high_clip)</span>:</span>
+
+    img = np.float64(img) + <span class="hljs-number">1.0</span>
+
+    img_retinex = MSR(img, sigma_list)
+
+    img_color = colorRestoration(img, alpha, beta)    
+    img_msrcr = G * (img_retinex * img_color + b)
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(img_msrcr.shape[<span class="hljs-number">2</span>]):
+        img_msrcr[:, :, i] = (img_msrcr[:, :, i] - np.min(img_msrcr[:, :, i])) / \
+                             (np.max(img_msrcr[:, :, i]) - np.min(img_msrcr[:, :, i])) * \
+                             <span class="hljs-number">255</span>
+    
+    img_msrcr = np.uint8(np.minimum(np.maximum(img_msrcr, <span class="hljs-number">0</span>), <span class="hljs-number">255</span>))
+    img_msrcr = simplestColorBalance(img_msrcr, low_clip, high_clip)       
+
+    <span class="hljs-keyword">return</span> img_msrcr
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">MSRCP</span><span class="hljs-params">(img, sigma_list, low_clip, high_clip)</span>:</span>
+
+    img = np.float64(img) + <span class="hljs-number">1.0</span>
+
+    intensity = np.sum(img, axis=<span class="hljs-number">2</span>) / img.shape[<span class="hljs-number">2</span>]    
+
+    retinex = multiScaleRetinex(intensity, sigma_list)
+
+    intensity = np.expand_dims(intensity, <span class="hljs-number">2</span>)
+    retinex = np.expand_dims(retinex, <span class="hljs-number">2</span>)
+
+    intensity1 = simplestColorBalance(retinex, low_clip, high_clip)
+
+    intensity1 = (intensity1 - np.min(intensity1)) / \
+                 (np.max(intensity1) - np.min(intensity1)) * \
+                 <span class="hljs-number">255.0</span> + <span class="hljs-number">1.0</span>
+
+    img_msrcp = np.zeros_like(img)
+    
+    <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> range(img_msrcp.shape[<span class="hljs-number">0</span>]):
+        <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> range(img_msrcp.shape[<span class="hljs-number">1</span>]):
+            B = np.max(img[y, x])
+            A = np.minimum(<span class="hljs-number">256.0</span> / B, intensity1[y, x, <span class="hljs-number">0</span>] / intensity[y, x, <span class="hljs-number">0</span>])
+            img_msrcp[y, x, <span class="hljs-number">0</span>] = A * img[y, x, <span class="hljs-number">0</span>]
+            img_msrcp[y, x, <span class="hljs-number">1</span>] = A * img[y, x, <span class="hljs-number">1</span>]
+            img_msrcp[y, x, <span class="hljs-number">2</span>] = A * img[y, x, <span class="hljs-number">2</span>]
+
+    img_msrcp = np.uint8(img_msrcp - <span class="hljs-number">1.0</span>)
+
+    <span class="hljs-keyword">return</span> img_msrcp
+</div></code></pre>
+<p>可以看出，对于光照的估计其实需要调整许多超参数才能有好的结果。测试图片Adobe-5k</p>
+<p><img src="img/md-2021-06-17-14-53-08.png" alt=""></p>
+<h3 id="32-%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%96%B9%E6%B3%95">3.2 白平衡方法</h3>
+<p>这里讲解一个常用白平衡算法：灰度世界算法； 灰度世界算法基于一个强假设：对于一幅有着大量色彩变化的图像的RGB三个分量的平均值趋于同一灰度值。这样我们对于有色差的图像，计算一个相对于这个灰度值的转换系数，就可以达到白平衡的效果。</p>
+<p>这个灰度值可以采用固定值如128，也可以采用RGB通道的均值。</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">gray_world_assumes_white_balance</span><span class="hljs-params">(img)</span>:</span>
+    <span class="hljs-string">"""
+    灰度世界假设
+    :param img: cv2.imread读取的图片数据
+    :return: 返回的白平衡结果图片数据
+    """</span>
+    B, G, R = np.double(img[:, :, <span class="hljs-number">0</span>]), np.double(img[:, :, <span class="hljs-number">1</span>]), np.double(img[:, :, <span class="hljs-number">2</span>])
+    B_ave, G_ave, R_ave = np.mean(B), np.mean(G), np.mean(R)
+    K = (B_ave + G_ave + R_ave) / <span class="hljs-number">3</span>
+    Kb, Kg, Kr = K / B_ave, K / G_ave, K / R_ave
+    Ba = (B * Kb)
+    Ga = (G * Kg)
+    Ra = (R * Kr)
+
+    Ba[Ba &gt; <span class="hljs-number">255</span>] = <span class="hljs-number">255</span>
+    Ga[Ga &gt; <span class="hljs-number">255</span>] = <span class="hljs-number">255</span>
+    Ra[Ra &gt; <span class="hljs-number">255</span>] = <span class="hljs-number">255</span>
+
+    <span class="hljs-comment"># print(np.mean(Ba), np.mean(Ga), np.mean(Ra))</span>
+    dst_img = np.uint8(np.zeros_like(img))
+    dst_img[:, :, <span class="hljs-number">0</span>] = Ba
+    dst_img[:, :, <span class="hljs-number">1</span>] = Ga
+    dst_img[:, :, <span class="hljs-number">2</span>] = Ra
+    <span class="hljs-keyword">return</span> dst_img
+</div></code></pre>
+<p>可想而知，如果图片色彩单一，特别是大色块的情况下，即假设不成立的情况，算法的效果不佳。Before测试图片来自网络，侵权请联系</p>
+<p><img src="img/md-2021-06-17-15-00-41.png" alt=""></p>
+<h2 id="4-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95">4. 深度学习算法</h2>
+<p>深度学习在图像处理上的有着广泛的应用。在这里介绍两种不同的色彩增强的思路：</p>
+<ul>
+<li>基于Retinex思路：Deep Retinex Decomposition for Low-Light Enhancement （2018）</li>
+<li>基于曲线工具：CURL: Neural Curve Layers for Global Image Enhancement （2020）</li>
+</ul>
+<p>其他思路：有基于GAN的方法和基于强化学习的方式</p>
+<h3 id="41-%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E9%9B%86">4.1 常用数据集</h3>
+<ul>
+<li>Adobe-5k: 数据库中包含5000张dng格式的原始图片及分别由五个（A，B，C，D，E）专业修图人员手工修饰后的图片。关于该数据库的详细资料可以在：https://data.csail.mit.edu/graphics/fivek/
+<img src="img/md-2021-06-17-15-59-13.png" alt=""></li>
+</ul>
+<h3 id="42-retinex-net">4.2 Retinex-net</h3>
+<p>Retinex-net借鉴了Retinex的思想来对低光图像增强的方法，整个网络分为三个部分：</p>
+<ul>
+<li>Decom分解网络：将输入图像S分解为反射图像R和光照图像L（S=R。L）</li>
+<li>调整网络：主要是针对L来调整，作用是将L调亮。采用的类似U-net的</li>
+<li>重构网络：将分解的R（加了去噪的操作）和调亮后的L相乘得到增强后的结果</li>
+</ul>
+<p>具体见下图</p>
+<p><img src="img/md-2021-06-17-17-36-23.png" alt=""></p>
+<p>可以看出图中有两个输入（配对的正常图片和低光图片），正常图片主要是为了指导训练网络的作用，整个训练过程需要不断优化三种loss</p>
+<ul>
+<li>分解网络中正常图片的分解的放射图像R和低光图片分解的R差异要小（来评估分解的有效性）</li>
+<li>在调整网络中：低光图像分解后的光亮L经过调整网络后的到调整后的光亮要和正常图片的分解的光亮图像差异小（来指导分解网络学习）</li>
+<li>重构网络得到重构图和输入正常图像差异小（全局指导）</li>
+</ul>
+<p>code传送门</p>
+<ul>
+<li>
+<p>https://github.com/weichen582/RetinexNet  代码是基于tensorflow版本</p>
+<pre class="hljs"><code><div>python main.py  \
+--use_gpu=<span class="hljs-number">1</span> \
+--gpu_idx=<span class="hljs-number">0</span> \
+--gpu_mem=<span class="hljs-number">0.5</span> \
+--phase=test \
+--test_dir=./RetinexNet/data/test/low \
+--save_dir=./test \
+--decom=<span class="hljs-number">0</span>    
+</div></code></pre>
+</li>
+</ul>
+<p><img src="img/md-2021-06-17-17-51-28.png" alt=""></p>
+<h3 id="43-curl">4.3 CURL</h3>
+<p>CURL这种思路借鉴了PS中曲线工具的调色方法，将它挪到深度学习框架中。总体框架如下：</p>
+<p><img src="img/md-2021-06-17-16-04-39.png" alt=""></p>
+<p>从结构上看</p>
+<ul>
+<li>TED：先通过一个编解码网络（Encoder-Decoder），输出一个图像和一些特征，比如输入的是512x512x3的图像，输出为512x512x64（其中前3个通道为图像，剩余的通道为特征，这些特征是为后面学习调整曲线的参数的）;</li>
+<li>CURL block： 接下来是分别在LAB/RGB/HSV空间上，用第一步特征加两个conv和一个fc层学习曲线调整参数，针对第一步中前3个通道进行调整。以此类推，最终得到就是512x512x3增强后的图像。曲线调整是通过学习一个分段线性函数来实现的。</li>
+</ul>
+<p>其中TED模块如下：</p>
+<p><img src="img/md-2021-06-17-16-05-07.png" alt=""></p>
+<ul>
+<li>TED是Unet的一种调整，见上图中右下角，主结构还是下采样再上采样，不同的是skip-connection只在第一层。</li>
+<li>第一层的skip-connection分为4个分支提取不同的特征，其中中间两路是不同感受野的特征提取，上面一路是全局特征提取。4个分支concat来作为总的特征</li>
+</ul>
+<p>CURL采用了多个颜色空间的loss来控制学习的过程。</p>
+<p><img src="img/md-2021-06-17-17-27-38.png" alt=""></p>
+<ul>
+<li>code传送门： https://github.com/sjmoran/CURL （代码的环境pytorch版本比较低，高版本的需要做些调整）</li>
+</ul>
+<p><img src="img/md-2021-06-17-17-16-18.png" alt=""></p>
+<h3 id="44-%E8%87%AA%E5%BB%BA%E6%95%B0%E6%8D%AE%E9%9B%86%E6%96%B9%E6%B3%95">4.4 自建数据集方法</h3>
+<p>有时候需要构建自己的数据来适应不同亮度和饱和度的应用场景。pytorch提供transforms.ColorJitter方法</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> torch
+<span class="hljs-keyword">import</span> torchvision
+<span class="hljs-keyword">import</span> torchvision.transforms <span class="hljs-keyword">as</span> transforms
+<span class="hljs-keyword">import</span> cv2
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> shutil
+<span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image
+
+brightness = (<span class="hljs-number">0.9</span>, <span class="hljs-number">0.98</span>)
+saturation = (<span class="hljs-number">0.7</span>, <span class="hljs-number">0.85</span>)
+img = Image.open(<span class="hljs-string">'./data/test.png'</span>).convert(<span class="hljs-string">'RGB'</span>)
+transform1 = transforms.Compose([
+    transforms.ColorJitter(brightness=brightness, contrast=<span class="hljs-number">0</span>, saturation=saturation, hue=<span class="hljs-number">0</span>)
+    ])
+
+process_img = transform1(img)
+process_img.save(save_img)
+</div></code></pre>
+<h2 id="5-%E6%80%BB%E7%BB%93">5. 总结</h2>
+<p>本文介绍色彩增强的概念以及色彩增强的不同应用场景，并分别介绍传统方法和深度学习方法，希望对你有帮助。总结如下：</p>
+<ul>
+<li>色彩增强： 调整低光图像，白平衡偏差图像和色彩暗淡图像</li>
+<li>必知必会：白平衡，ps曲线工具原理和不同的色彩空间</li>
+<li>retinex方法</li>
+<li>深度学习方法：retinex-base方法Retinex-Net， 曲线调整CURL以及GAN方法如DPE和增强学习方法如White-Box</li>
+<li>transforms.ColorJitter自制数据集</li>
+</ul>
+<h2 id="6-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">6. 参考资料</h2>
+<ul>
+<li>Deep Retinex Decomposition for Low-Light Enhancement</li>
+<li>CURL: Neural Curve Layers for Global Image Enhancement</li>
+<li>DeepLPF(2020): DeepLPF Deep Local Parametric Filters for Image Enhancement</li>
+<li>Deep Photo Enhancer: Unpaired Learning for Image Enhancement from Photographs with GANs</li>
+<li>White-Box(2018)： Exposure: A White-Box Photo Post-Processing Framework</li>
+<li>Distort-and-Recover(2018)：Distort-and-Recover: Color Enhancement using Deep Reinforcement Learning</li>
+<li>Zero-Reference Deep Curve Estimation for Low-Light Image Enhancement（2020）</li>
+<li>LLNet: A Deep Autoencoder approach to Natural Low-light Image Enhancement（2016）</li>
+<li>https://data.csail.mit.edu/graphics/fivek/</li>
+</ul>
+
+</body>
+</html>
