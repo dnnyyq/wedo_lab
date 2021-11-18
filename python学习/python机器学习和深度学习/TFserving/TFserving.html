@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TFserving.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E6%98%AF%E6%97%B6%E5%80%99%E9%83%A8%E7%BD%B2%E4%BD%A0%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B%E4%BA%86-tfserving%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97">是时候部署你的深度学习模型了-TFserving使用指南</h1>
+<p>个人简介：
+wedo实验君, 数据分析师；热爱生活，热爱写作</p>
+<h2 id="1%E4%BB%80%E4%B9%88%E6%98%AFtfserving"><strong>1.什么是TFserving</strong></h2>
+<p>当你训好你的模型，需要提供给外部使用的时候，你就需要把模型部署到线上，并提供合适的接口给外部调用。
+你可能会考虑一些问题：</p>
+<ul>
+<li>用什么来部署</li>
+<li>怎么提供api接口</li>
+<li>多个模型GPU资源如何分配</li>
+<li>线上模型如何更新而服务不中断</li>
+</ul>
+<p>目前流行的深度学习框架Tensorflow和Pytorch， Pytorch官方并没有提供合适的线上部署方案；Tensorflow则提供了TFserving方案来部署线上模型推理。另外，Model Server for Apache MXNet 为MXNet模型提供推理服务。</p>
+<p>本文为TFServing的使用指南。如果你是pytorch或者MXNet模型，也可以通过ONNX转成TFserving的模型，部署在TFServing上。</p>
+<p>那什么是TFserving?</p>
+<p>TFserving是Google 2017推出的线上推理服务；采用C/S架构，客户端可通过gRPC和RESTfull API与模型服务进行通信。</p>
+<p><img src="img/md-2020-05-17-23-41-55.png" alt=""></p>
+<p>TFServing的特点：</p>
+<ul>
+<li>支持模型版本控制和回滚：Manager会进行模型的版本的管理</li>
+<li>支持并发，实现高吞吐量</li>
+<li>开箱即用，并且可定制化</li>
+<li>支持多模型服务</li>
+<li>支持批处理</li>
+<li>支持热更新：Source加载本地模型，通知Manager有新的模型需要加载，Manager检查模型的版本，通知Source创建的Loader进行加载模型</li>
+<li>支持分布式模型</li>
+</ul>
+<h2 id="2tfserving%E5%AE%89%E8%A3%85"><strong>2.TFserving安装</strong></h2>
+<p>强烈建议采用docker方式安装TFserving，安装依赖docker和nvidia-docker（TFserving的gpu需要）</p>
+<ul>
+<li>docker 安装</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment">#安装yum-utils工具和device-mapper相关依赖包</span>
+yum install -y yum-utils \
+device-mapper-persistent-data \
+lvm2
+
+<span class="hljs-comment">#添加docker-ce stable版本的仓库</span>
+yum-config-manager \
+--add-repo \
+https://download.docker.com/linux/centos/docker-ce.repo
+
+<span class="hljs-comment">#更新yum缓存文件</span>
+yum makecache fast
+
+<span class="hljs-comment">#查看所有可安装的docker-ce版本</span>
+yum list docker-ce --showduplicates | sort -r
+
+<span class="hljs-comment"># 安装docker-ce</span>
+yum install docker-ce-17.12.1.ce-1.el7.centos
+
+<span class="hljs-comment">#允许开机启动docker-ce服务</span>
+systemctl <span class="hljs-built_in">enable</span> docker.service
+
+<span class="hljs-comment">#启动Docker-ce服务</span>
+systemctl start docker
+
+<span class="hljs-comment">#运行测试容器hello-world</span>
+docker run --rm hello-world
+</div></code></pre>
+<ul>
+<li>nvidia-docker 安装</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment"># 安装nvidia-docker2</span>
+yum install -y nvidia-docker2-2.0.3-1.docker17.12.1.ce
+
+<span class="hljs-comment"># 重启docker服务</span>
+service docker restart
+</div></code></pre>
+<ul>
+<li>安装TFserving</li>
+</ul>
+<pre class="hljs"><code><div>docker pull tensorflow/serving:latest-gpu
+<span class="hljs-comment"># 可以选择其他版本如 docker pull tensorflow/serving:1.14.0-rc0-gpu</span>
+</div></code></pre>
+<p>注意： docker版本和nvidia-docker要匹配</p>
+<ul>
+<li>目前最新的nvidia-docker需要Docker为19.03 可参考官方https://github.com/NVIDIA/nvidia-docker</li>
+<li>nvidia-docker2 支持Docker版本低于19.03的其他版本（需&gt;=1.12），现有服务器有18.09,1.17,1.13  https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0)</li>
+</ul>
+<h2 id="3tfserving%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><strong>3.TFserving使用说明</strong></h2>
+<h3 id="31-%E6%A8%A1%E5%9E%8B%E8%BD%AC%E6%8D%A2"><strong>3.1 模型转换</strong></h3>
+<p>TFserving的模型需要转换成TFserving的格式， 不支持通常的checkpoint和pb格式。</p>
+<p>TFserving的模型包含一个.pb文件和variables目录（可以为空）,导出格式如下：</p>
+<pre class="hljs"><code><div>.
+├── 1
+│   ├── saved_model.pb
+│   └── variables
+├── 2
+│   ├── saved_model.pb
+│   └── variables
+</div></code></pre>
+<p>不同的深度学习框架的转换路径：</p>
+<pre class="hljs"><code><div>(1) pytorch(.pth)--&gt; onnx(.onnx)--&gt; tensorflow(.pb) --&gt; TFserving
+(2) keras(.h5)--&gt; tensorflow(.pb) --&gt; TFserving
+(3) tensorflow(.pb) --&gt; TFserving
+</div></code></pre>
+<p>这里详细介绍下pb转换成TFserving模型</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create_graph</span><span class="hljs-params">(pb_file)</span>:</span>
+    <span class="hljs-string">"""Creates a graph from saved GraphDef file and returns a saver."""</span>
+    <span class="hljs-comment"># Creates graph from saved graph_def.pb.</span>
+    <span class="hljs-keyword">with</span> tf.gfile.FastGFile(pb_file, <span class="hljs-string">'rb'</span>) <span class="hljs-keyword">as</span> f:
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(f.read())
+        _ = tf.import_graph_def(graph_def, name=<span class="hljs-string">''</span>)
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pb_to_tfserving</span><span class="hljs-params">(pb_file, export_path, pb_io_name=[], input_node_name=<span class="hljs-string">'input'</span>, output_node_name=<span class="hljs-string">'output'</span>, signature_name=<span class="hljs-string">'default_tfserving'</span>)</span>:</span>
+    <span class="hljs-comment"># pb_io_name 为 pb模型输入和输出的节点名称，</span>
+    <span class="hljs-comment"># input_node_name为转化后输入名</span>
+    <span class="hljs-comment"># output_node_name为转化后输出名</span>
+    <span class="hljs-comment"># signature_name 为签名</span>
+    create_graph(pb_file)
+    <span class="hljs-comment"># tensor_name_list = [tensor.name for tensor in tf.get_default_graph().as_graph_def().node]</span>
+    input_name = <span class="hljs-string">'%s:0'</span> % pb_io_name[<span class="hljs-number">0</span>]
+    output_name = <span class="hljs-string">'%s:0'</span> % pb_io_name[<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">with</span> tf.Session() <span class="hljs-keyword">as</span> sess:
+        in_tensor = sess.graph.get_tensor_by_name(input_name)
+        out_tensor = sess.graph.get_tensor_by_name(output_name)
+        builder = tf.saved_model.builder.SavedModelBuilder(export_path)  <span class="hljs-comment">## export_path导出路径</span>
+        inputs = {input_node_name: tf.saved_model.utils.build_tensor_info(in_tensor)}  
+        outputs = {output_node_name: tf.saved_model.utils.build_tensor_info(out_tensor)}
+        signature = tf.saved_model.signature_def_utils.build_signature_def(
+            inputs, outputs, method_name=tf.saved_model.signature_constants.PREDICT_METHOD_NAME)
+        builder.add_meta_graph_and_variables(
+            sess=sess, tags=[tf.saved_model.tag_constants.SERVING],
+            signature_def_map={signature_name: signature}, clear_devices=<span class="hljs-literal">True</span>)  <span class="hljs-comment">## signature_name为签名，可自定义</span>
+        builder.save()
+ 
+ 
+pb_model_path = <span class="hljs-string">'test.pb'</span>
+pb_to_tfserving(pb_model_path, <span class="hljs-string">'./1'</span>, pb_io_name=[<span class="hljs-string">'input_1_1'</span>,<span class="hljs-string">'output_1'</span>],signature_name=<span class="hljs-string">'your_model'</span>)
+
+</div></code></pre>
+<h3 id="32-tfserving%E9%85%8D%E7%BD%AE%E5%92%8C%E5%90%AF%E5%8A%A8"><strong>3.2 TFserving配置和启动</strong></h3>
+<p>模型导出后，同一个模型可以导出不同的版本（版本后数字），可以TFserving配置中指定模型和指定版本。TFserving的模型是通过<code>模型名称</code>和<code>签名</code>来唯一定位。TFserving 可以配置多个模型，充分利用GPU资源。</p>
+<ul>
+<li>模型配置</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment"># models.config</span>
+model_config_list {
+  config {
+    name: <span class="hljs-string">'your_model'</span>
+    base_path: <span class="hljs-string">'/models/your_model/'</span>
+    model_platform: <span class="hljs-string">'tensorflow'</span>
+<span class="hljs-comment">#     model_version_policy {</span>
+<span class="hljs-comment">#       specific {</span>
+<span class="hljs-comment">#         versions: 42</span>
+<span class="hljs-comment">#         versions: 43</span>
+<span class="hljs-comment">#       }</span>
+<span class="hljs-comment">#     }</span>
+<span class="hljs-comment">#     version_labels {</span>
+<span class="hljs-comment">#       key: 'stable'</span>
+<span class="hljs-comment">#       value: 43</span>
+<span class="hljs-comment">#     }</span>
+<span class="hljs-comment">#     version_labels {</span>
+<span class="hljs-comment">#       key: 'canary'</span>
+<span class="hljs-comment">#       value: 43</span>
+<span class="hljs-comment">#     }</span>
+  }
+  config {
+    name: <span class="hljs-string">"mnist"</span>,
+    base_path: <span class="hljs-string">"/models/mnist"</span>,
+    model_platform: <span class="hljs-string">"tensorflow"</span>,
+    model_version_policy: {
+       specific: {
+        versions: 1,
+        versions: 2
+       }
+  }
+}
+ 
+<span class="hljs-comment"># 可以通过model_version_policy 进行版本的控制</span>
+</div></code></pre>
+<ul>
+<li>启动服务</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment"># 建议把模型和配置文件放在docker外的本地路径，如/home/tfserving/models， 通过-v 挂载到docker内部</span>
+<span class="hljs-comment"># --model_config_file： 指定模型配置文件</span>
+<span class="hljs-comment"># -e NVIDIA_VISIBLE_DEVICES=0： 指定GPU</span>
+<span class="hljs-comment"># -p 指定端口映射 8500为gRpc 8501为restful api端口</span>
+<span class="hljs-comment"># -t 为docker镜像</span>
+nvidia-docker run  -it --privileged  -d -e NVIDIA_VISIBLE_DEVICES=0  -v /home/tfserving/models:/models  -p 8500:8500 -p 8501:8501 \
+ -t tensorflow/serving:latest-gpu \
+--model_config_file=/models/models.config
+ 
+<span class="hljs-comment"># /home/tfserving/models 结构</span>
+.
+├── models.config
+└── your_model
+    ├── 1
+    │   ├── saved_model.pb
+    │   └── variables
+    └── 2
+        ├── saved_model.pb
+        └── variables
+ 
+<span class="hljs-comment"># test</span>
+curl http://192.168.0.3:8501/v1/models/your_model
+{
+    <span class="hljs-string">"model_version_status"</span>: [
+        {
+            <span class="hljs-string">"version"</span>: <span class="hljs-string">"2"</span>,
+            <span class="hljs-string">"state"</span>: <span class="hljs-string">"AVAILABLE"</span>,
+            <span class="hljs-string">"status"</span>: {
+            <span class="hljs-string">"error_code"</span>: <span class="hljs-string">"OK"</span>,
+            <span class="hljs-string">"error_message"</span>: <span class="hljs-string">""</span>
+            }
+        }
+    ]      
+}
+ 
+ 
+<span class="hljs-comment"># 其他启动方式</span>
+<span class="hljs-comment"># 如果多个模型在不同的目录，可以通过-mount 单独加载</span>
+ 
+nvidia-docker run  -it --privileged  -d -e NVIDIA_VISIBLE_DEVICES=0 \
+--mount <span class="hljs-built_in">type</span>=<span class="hljs-built_in">bind</span>,<span class="hljs-built_in">source</span>=/home/tfserving/models/your_model,target=/models/your_model \
+--mount <span class="hljs-built_in">type</span>=<span class="hljs-built_in">bind</span>,<span class="hljs-built_in">source</span>=/home/tfserving/models/your_model/models.config,target=/models/models.config \
+-p 8510:8500 -p 8501:8501 \
+-t tensorflow/serving:latest-gpu \
+--model_config_file=/models/models.config
+</div></code></pre>
+<h3 id="33-tfserving%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8"><strong>3.3 TFserving服务调用</strong></h3>
+<p>客户端可以通过gRpc和http方式调用TFserving服务模型，支持多种客户端语言，这里提供python的调用方式; 调用都是通过<code>模型名称</code>和<code>签名</code>来唯一对应一个模型</p>
+<ul>
+<li>gRpc调用, gRpc的端口是8500</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment">#</span>
+<span class="hljs-comment"># -*-coding:utf-8 -*-</span>
+<span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf
+<span class="hljs-keyword">from</span> tensorflow_serving.apis <span class="hljs-keyword">import</span> predict_pb2
+<span class="hljs-keyword">from</span> tensorflow_serving.apis <span class="hljs-keyword">import</span> prediction_service_pb2_grpc
+<span class="hljs-keyword">import</span> grpc
+<span class="hljs-keyword">import</span> time
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+ 
+ 
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">YourModel</span><span class="hljs-params">(object)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, socket)</span>:</span>
+        <span class="hljs-string">"""
+ 
+        Args:
+            socket: host and port of the tfserving, like 192.168.0.3:8500
+        """</span>
+        self.socket = socket
+        start = time.time()
+        self.request, self.stub = self.__get_request()
+        end = time.time()
+        print(<span class="hljs-string">'initialize cost time: '</span> + str(end - start) + <span class="hljs-string">' s'</span>)
+ 
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__get_request</span><span class="hljs-params">(self)</span>:</span>
+        channel = grpc.insecure_channel(self.socket, options=[(<span class="hljs-string">'grpc.max_send_message_length'</span>, <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>),
+                                                              (<span class="hljs-string">'grpc.max_receive_message_length'</span>, <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>)]) <span class="hljs-comment"># 可设置大小</span>
+        stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
+        request = predict_pb2.PredictRequest()
+ 
+        request.model_spec.name = <span class="hljs-string">"your_model"</span>  <span class="hljs-comment"># model name</span>
+        request.model_spec.signature_name = <span class="hljs-string">"your_model"</span>  <span class="hljs-comment"># model signature name</span>
+ 
+        <span class="hljs-keyword">return</span> request, stub
+ 
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">run</span><span class="hljs-params">(self, image)</span>:</span>
+        <span class="hljs-string">"""
+ 
+        Args:
+            image: the input image（rgb format）
+ 
+        Returns: embedding is output of model
+ 
+        """</span>
+        img = image[..., ::<span class="hljs-number">-1</span>] 
+        self.request.inputs[<span class="hljs-string">'input'</span>].CopyFrom(tf.contrib.util.make_tensor_proto(img))  <span class="hljs-comment"># images is input of model</span>
+        result = self.stub.Predict(self.request, <span class="hljs-number">30.0</span>)
+        <span class="hljs-keyword">return</span> tf.make_ndarray(result.outputs[<span class="hljs-string">'output'</span>])
+ 
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">run_file</span><span class="hljs-params">(self, image_file)</span>:</span>
+        <span class="hljs-string">"""
+ 
+        Args:
+            image_file: the input image file
+ 
+        Returns:
+ 
+        """</span>
+        image = cv2.imread(image_file)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        <span class="hljs-keyword">return</span> self.run(image)
+ 
+ 
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    model = YourModel(<span class="hljs-string">'192.168.0.3:8500'</span>)
+    test_file = <span class="hljs-string">'./test.jpg'</span>
+    result = model.run_file(test_file)
+    print(result)
+    <span class="hljs-comment"># [8.014745e-05 9.999199e-01]</span>
+</div></code></pre>
+<ul>
+<li>restful api调用: restful端口是8501</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> cv2
+<span class="hljs-keyword">import</span> requests
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SelfEncoder</span><span class="hljs-params">(json.JSONEncoder)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">default</span><span class="hljs-params">(self, obj)</span>:</span>
+        <span class="hljs-keyword">if</span> isinstance(obj, np.ndarray):
+            <span class="hljs-keyword">return</span> obj.tolist()
+        <span class="hljs-keyword">elif</span> isinstance(obj, np.floating):
+            <span class="hljs-keyword">return</span> float(obj)
+        <span class="hljs-keyword">elif</span> isinstance(obj, bytes):
+            <span class="hljs-keyword">return</span> str(obj, encoding=<span class="hljs-string">'utf-8'</span>);
+        <span class="hljs-keyword">return</span> json.JSONEncoder.default(self, obj)
+ 
+image_file = <span class="hljs-string">'/home/tfserving/test.jpg'</span>
+image = cv2.imread(image_file)
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+img = image[..., ::<span class="hljs-number">-1</span>]
+
+ 
+input_data = {
+    <span class="hljs-string">"signature_name"</span>: <span class="hljs-string">"your_model"</span>,
+    <span class="hljs-string">"instances"</span>: img
+}
+data = json.dumps(input_data, cls=SelfEncoder, indent=<span class="hljs-literal">None</span>)
+result = requests.post(<span class="hljs-string">"http://192.168.0.3:8501/v1/models/your_model:predict"</span>, data=data)
+eval(result .content)
+ 
+<span class="hljs-comment"># {'predictions': [8.01474525e-05, 0.999919891]}</span>
+</div></code></pre>
+<h2 id="5%E6%80%BB%E7%BB%93"><strong>5.总结</strong></h2>
+<p>本文介绍了TFserving部署线上推理服务，从模型的转换，部署启动和调用推理，欢迎交流，希望对你有帮助。
+我们来回答下开篇提出的问题</p>
+<ul>
+<li>
+<p>用什么来部署： 当然是TFserving</p>
+</li>
+<li>
+<p>怎么提供api接口： TFserving有提供restful api接口，现实部署时会在前面再加一层如flask api</p>
+</li>
+<li>
+<p>多个模型GPU资源如何分配： TFserving支持部署多模型，通过配置</p>
+</li>
+<li>
+<p>线上模型如何更新而服务不中断： TFserving支持模型的不同的版本，如your_model中1和2两个版本，当你新增一个3模型时，TFserving会自动判断，自动加载模型3为当前模型，不需要重启</p>
+</li>
+<li>
+<p>参考资料</p>
+<ul>
+<li>https://www.tensorflow.org/tfx/guide/serving</li>
+<li>https://www.tensorflow.org/tfx/serving/api_rest</li>
+</ul>
+</li>
+</ul>
+
+</body>
+</html>
